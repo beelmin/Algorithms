@@ -1,0 +1,47 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+
+using namespace std;
+
+void PronadjiPodniz(const vector<int> &v, int suma) {
+
+    unordered_map<int,int> mapa;
+
+    int prefiks_suma = 0;
+
+    for(int i = 0; i < v.size(); i++) {
+
+        prefiks_suma += v[i];
+
+        if(prefiks_suma == suma) {
+            cout << 0 << " " << i << endl;
+            return;
+        }
+
+        if(mapa.find(prefiks_suma - suma) != mapa.end()) {
+            cout << mapa[prefiks_suma - suma] + 1 <<" " << i << endl;
+            return;
+        }
+
+        mapa[prefiks_suma] = i;
+
+    }
+
+    cout << "Ne postoji podniz sa tom sumom" << endl;
+
+}
+
+
+
+int main() {
+
+    vector<int> v = {1, 4, 20, 3, 10, 5};
+    int suma = 33;
+
+    PronadjiPodniz(v,suma);
+
+
+
+    return 0;
+}

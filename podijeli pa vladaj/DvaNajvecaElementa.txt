@@ -1,0 +1,62 @@
+Potrebno je naci najveci i drugi najveci element u nizu u manje od (3n) / 2 poredjenja
+
+Bazni slucajevi trebaju bit za 2 i 3 elemetna, ne za 1 i 2 
+
+#include <iostream>
+
+using namespace std;
+
+struct par {
+    int najveci;
+    int drugi_najveci;
+};
+
+par DvaNajveca(int niz[], int pocetak, int kraj){
+    par rezultat;
+    if(pocetak == kraj){
+        rezultat.najveci = niz[pocetak];
+        rezultat.drugi_najveci = niz[pocetak];
+        return rezultat;
+    }
+    if(kraj - pocetak == 1){
+        if(niz[pocetak] > niz[kraj]){
+            rezultat.najveci = niz[pocetak];
+            rezultat.drugi_najveci = niz[kraj];
+        }else{
+            rezultat.najveci = niz[kraj];
+            rezultat.drugi_najveci = niz[pocetak];
+        }
+        return rezultat;
+    }
+
+    int sredina = (pocetak + kraj) / 2;
+    par lijevo = DvaNajveca(niz,pocetak,sredina);
+    par desno = DvaNajveca(niz,sredina+1,kraj);
+
+    if(lijevo.najveci <= desno.najveci){
+        rezultat.najveci = desno.najveci;
+        if(desno.drugi_najveci >= lijevo.najveci ){
+            rezultat.drugi_najveci = desno.drugi_najveci;
+        }else{
+            rezultat.drugi_najveci = lijevo.najveci;
+        }
+    }else{
+        rezultat.najveci=lijevo.najveci;
+        if(lijevo.drugi_najveci >= desno.najveci){
+            rezultat.drugi_najveci = lijevo.drugi_najveci;
+        }else{
+            rezultat.drugi_najveci = desno.najveci;
+        }
+    }
+    return rezultat;
+}
+
+
+int main() {
+
+  int niz[] = {3,8,5,2,4,10,1};
+  int n = sizeof(niz) / sizeof(niz[0]);
+  par rez = DvaNajveca(niz,0,n-1);
+  cout << rez.najveci << " " << rez.drugi_najveci;
+  return 0;
+}

@@ -1,0 +1,67 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+bool JeLiZvijezda(vector<vector<int> > &matrica) {
+
+    int n = matrica.size();
+
+    if(n == 1) {
+        if(matrica[0][0] == 0) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    if(n == 2) {
+        if(matrica[0][0] == 0 && matrica[0][1] == 1 &&
+            matrica[1][0] == 1 && matrica[1][1] == 0) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    int Stepen1 = 0;        // broj cvorova sa stepenom 1
+    int StepenN_1 = 0;      // broj cvorova sa stepenom n-1
+
+    for(int i = 0; i < n; i++) {
+        int stepen = 0;
+        for(int j = 0; j < n; j++) {
+            if(matrica[i][j] == 1) {
+                stepen++;
+            }
+        }
+        if(stepen == 1) {
+            Stepen1++;
+        }else if(stepen == n-1) {
+            StepenN_1++;
+        }
+    }
+
+    if(Stepen1 == n-1 && StepenN_1 == 1) {      // moramo imati 1 cvor sa stepenom n-1 i n-1 cvorova sa stepenom 1
+        return true;
+    }
+    return false;
+
+}
+
+
+
+
+int main()
+{
+    vector<vector<int> > matrica = { {0,1,1,1},
+                                     {1,0,0,0},
+                                     {1,0,0,0},
+                                     {1,0,0,0} };
+
+    cout << JeLiZvijezda(matrica);
+
+
+    return 0;
+}
+
+vremenska kompleksnost :  O( n^2 )

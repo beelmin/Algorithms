@@ -1,0 +1,88 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+bool sigurnaPozicija(vector<vector<int> > &matrica, int red, int kolona) {
+
+    int i,j;
+
+    // provjeravamo red
+    for(i = 0; i < kolona; i++) {
+        if(matrica[red][i]){
+            return false;
+        }
+    }
+
+    // provjeravamo gornju dijagonalu
+    for(i = red,j = kolona; i >= 0 && j >= 0; i--,j--) {
+        if(matrica[i][j]){
+            return false;
+        }
+    }
+
+    // provjeravamo donju dijagonalu
+    for(i = red,j = kolona; j >= 0 && i < matrica.size(); i++,j--) {
+        if(matrica[i][j]) {
+            return false;
+        }
+    }
+
+    return true;
+
+}
+
+bool problemKraljica(vector<vector<int> > &matrica, int kolona) {
+
+    if(kolona >= matrica.size()) {
+        return true;
+    }
+
+    for(int i = 0; i < matrica.size(); i++) {
+
+        if(sigurnaPozicija(matrica,i,kolona)){
+
+            matrica[i][kolona] = 1;
+
+            // prelazimo u sljedecu kolonu
+            if(problemKraljica(matrica,kolona+1)){
+                return true;
+            }
+            // ako u sljedecoj koloni nismo ni u jedan red mogli postaviti kraljicu
+            // vracamo se nazad ( backtrack ) i uklanjamo kraljicu sa ove pozicije
+            // i trazimo joj sljedeci red
+            matrica[i][kolona] = 0;
+        }
+
+    }
+    // ako kraljicu nismo mogli postaviti niti u jedan red u koloni "kolona"
+    // onda za tu kolonu vracamo false
+    return false;
+}
+
+
+
+
+int main()
+{
+
+   int n;
+   cin >> n;
+   vector<vector<int> > matrica(n,vector<int>(n,0));
+
+   if(problemKraljica(matrica,0) == false) {
+        cout << "rjesenje ne postoji";
+   }else{
+
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < n; j++) {
+                cout << matrica[i][j] << " ";
+            }
+            cout << endl;
+        }
+
+   }
+
+
+   return 0;
+}

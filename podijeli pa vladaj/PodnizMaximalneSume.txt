@@ -1,0 +1,48 @@
+Potrebno je u nizu pronaci podniz uzastopnih elemenata sa maximalnom sumom.
+
+#include <iostream>
+
+using namespace std;
+
+int max3(int a, int b, int c) {
+    return max(max(a,b),c);
+}
+
+int maxSuma(int niz[], int pocetak, int kraj) {
+    if(pocetak == kraj) {
+        return niz[pocetak];
+    }
+    int sredina = (pocetak + kraj) / 2;
+    int lijevaSuma = maxSuma(niz,pocetak,sredina);
+    int desnaSuma = maxSuma(niz,sredina+1,kraj);
+    int lijeva_suma = 0;
+    int max_lijeva_suma = 0;
+    for(int i = sredina; i>=pocetak; i--){
+        lijeva_suma += niz[i];
+        if(lijeva_suma > max_lijeva_suma){
+            max_lijeva_suma = lijeva_suma;
+        }
+    }
+    int desna_suma = 0;
+    int max_desna_suma = 0;
+    for(int i = sredina+1; i<=kraj; i++){
+        desna_suma += niz[i];
+        if(desna_suma > max_desna_suma){
+            max_desna_suma = desna_suma;
+        }
+    }
+    return max3(lijevaSuma,desnaSuma,max_lijeva_suma+max_desna_suma);
+}
+
+
+
+int main()
+{
+    int niz[] = {-2, -5, 6, -2, -3, 1, 5, -6};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    cout << maxSuma(niz,0,n-1);
+
+    return 0;
+}
+
+vremenska kompleksnost : O(nlog(n))

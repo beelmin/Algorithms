@@ -1,0 +1,73 @@
+Data je matrica n x m. Iz svakog reda treba odabrati po 1 element i dodat ga u sumu. Elementi moraju biti u rastucem poretku.
+Takvu sumu je potrebno maksimizirati. Ako se u nekom redu ne moze odabrati element, vratiti 0.
+
+primjer 
+
+vector<vector<int> > v = { {1, 7, 3, 4},
+                               {4, 2, 5, 1},
+                               {9, 5, 1, 8} };
+
+u zadnjem redu odaberemo 9, zatim u predzadnjem trazimo najveci broj koji je manji od 9, a to je 5
+u prvom redu trazimo opet najveci koji je manji od 5 a to je 4 pa je suma 9 + 5 + 4 = 18
+da su u prvom redu bili svi brojevi veci od 5, vratili bi 0 
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int MaxSuma(vector<vector<int> > &v, int najveci) {
+
+    int n = v.size();
+    int m = v[0].size();
+    int prethodni = najveci;
+    int suma = prethodni;
+
+    for(int i = n-2; i >= 0; i--) { // idemo od predzadnjeg reda pa sve do prvog
+        int prethodni_najveci = INT_MIN;
+        for(int j = 0; j < m; j++) {
+            if(v[i][j] < prethodni && v[i][j] > prethodni_najveci) {
+                prethodni_najveci = v[i][j];
+            }
+        }
+
+        if(prethodni_najveci == INT_MIN) {
+            return 0;
+        }
+
+        prethodni = prethodni_najveci;
+        suma += prethodni;
+
+    }
+
+    return suma;
+
+}
+
+
+
+
+int main()
+{
+
+    vector<vector<int> > v = { {1, 7, 3, 4},
+                               {4, 2, 5, 1},
+                               {9, 5, 1, 8} };
+
+    int n = v.size();
+    int m = v[0].size();
+    int najveci = INT_MIN;
+
+    for(int i = 0; i < m; i++) {    // nadjemo najveci element u zadnjem redu
+        if(v[n-1][i] > najveci) {
+            najveci = v[n-1][i];
+        }
+    }
+
+    cout << MaxSuma(v,najveci);
+
+
+    return 0;
+}
+

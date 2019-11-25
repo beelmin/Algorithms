@@ -1,0 +1,37 @@
+Dat je niz od "n" brojeva. Potrebno je pronaci trojku sa najvecom sumom.
+
+#include <iostream>
+
+using namespace std;
+
+int MaxSumaTrojki(int niz[], int n) {
+    int maxA = INT_MIN, maxB = INT_MIN, maxC = INT_MIN;
+    for(int i = 0; i < n; i++) {
+        if(niz[i] > maxA){
+            maxC = maxB;
+            maxB = maxA;
+            maxA = niz[i];
+        }else if(niz[i] > maxB) {
+            maxC = maxB;
+            maxB = niz[i];
+        }else if(niz[i] > maxC) {
+            maxC = niz[i];
+        }
+    }
+
+    return maxA + maxB + maxC;
+}
+
+
+
+int main() {
+
+    int niz[] = {7, 9, 5, 6, 3, 2};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    cout << MaxSumaTrojki(niz,n);
+
+
+    return 0;
+}
+
+vremenska kompleksnost :  O(n)

@@ -1,0 +1,55 @@
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+void Ispisi(stack<int> S) {
+    while(!S.empty()) {
+        cout << S.top() << " ";
+        S.pop();
+    }
+    cout << endl;
+}
+
+void SortirajUmetanjem(stack<int> &S, int x) {
+
+    if(S.empty() || x > S.top()) {
+        S.push(x);
+        return;
+    }
+
+    int temp = S.top();
+    S.pop();
+    SortirajUmetanjem(S,x);
+    S.push(temp);
+
+}
+
+void Sortiraj(stack<int> &S) {
+
+    if(!S.empty()) {
+
+        int x = S.top();
+        S.pop();
+        Sortiraj(S);
+        SortirajUmetanjem(S,x);
+
+    }
+
+}
+
+int main()
+{
+    stack<int> S;
+    S.push(30);
+    S.push(-5);
+    S.push(18);
+    S.push(14);
+    S.push(-3);
+    
+    Sortiraj(S);
+    Ispisi(S);
+
+
+   return 0;
+}

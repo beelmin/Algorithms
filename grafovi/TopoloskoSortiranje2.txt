@@ -1,0 +1,68 @@
+Topolosko sortiranje za usmjereni aciklicni graf.
+
+#include <iostream>
+#include <list>
+#include <stack>
+#include <vector>
+
+using namespace std;
+
+struct Graf {
+    int V;
+    list<int> *lista;
+public:
+    Graf(int V) {
+        this->V = V;
+        lista = new list<int>[V];
+    }
+    void DodajGranu(int v, int w){
+        lista[v].push_back(w);
+    }
+    void TopoloskoSortiranje();
+    void DFS(int v, vector<bool> &posjecen, stack<int> &stek);
+
+};
+
+void Graf::DFS(int v, vector<bool> &posjecen, stack<int> &stek) {
+    posjecen[v] = true;
+    list<int>::iterator it;
+    for(it = lista[v].begin(); it != lista[v].end(); it++) {
+        if(posjecen[*it] == false){
+            DFS(*it,posjecen,stek);
+        }
+    }
+    stek.push(v);
+}
+
+void Graf::TopoloskoSortiranje() {
+    vector<bool> posjecen(V);
+    for(int i = 0; i < V; i++){
+        posjecen[i] = false;
+    }
+    stack<int> stek;
+    for(int i = 0; i < V; i++) {
+        if(posjecen[i] == false) {
+            DFS(i,posjecen,stek);
+        }
+    }
+    while(!stek.empty()) {
+        cout << stek.top() << " ";
+        stek.pop();
+    }
+}
+
+int main() {
+
+  Graf g(6);
+  g.DodajGranu(5, 2);
+  g.DodajGranu(5, 0);
+  g.DodajGranu(4, 0);
+  g.DodajGranu(4, 1);
+  g.DodajGranu(2, 3);
+  g.DodajGranu(3, 1);
+  g.TopoloskoSortiranje();
+
+  return 0;
+}
+
+vremenska kompleksnost : O ( V + E )

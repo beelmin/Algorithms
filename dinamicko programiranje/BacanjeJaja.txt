@@ -1,0 +1,49 @@
+Dato nam je "n" jaja i "k" spratova. Potrebno je naci najmanji broj pokusaja potrebnih, u najgorem slucaju , da se nadje kriticni sprat, a svi spratovi
+ispod su sigurni. 
+Sprat je kritican ako bacanje jajeta sa njeg uzrokuje pucanje jajeta. 
+Sprat je siguran ako bacanje jajeta sa njeg ne uzrokuje pucanje jajeta.
+
+#include <iostream>
+
+using namespace std;
+
+int BacanjeJaja(int n, int k) {             // n - broj jaja    k - broj spratova
+    int niz[n+1][k+1];
+    int rez;
+
+    for(int i = 1; i <= k; i++) {      // za 1 jaje i k spratova treba nam k pokusaja u najgorem slucaju
+        niz[1][i] = i;
+    }
+
+    for(int i = 1; i <= n; i++) {
+        niz[i][0] = 0;                  // za 0 spratova nam treba 0 pokusaja
+        niz[i][1] = 1;                  // za 1 sprat nam treba 1 pokusaj
+
+    }
+
+    for(int i = 2; i <=n; i++) {        // rjesavamo sad jaje po jaje krecuci od drugog pa do n-tog
+        for(int j = 2; j <= k; j++) {
+            niz[i][j] = INT_MAX;
+            for(int x = 1; x <=j; x++) {
+                rez = 1 + max(niz[i-1][x-1], niz[i][j-x]);
+                if(rez < niz[i][j]){
+                    niz[i][j] = rez;
+                }
+            }
+        }
+    }
+
+    return niz[n][k];
+}
+
+
+
+int main() {
+
+    cout << BacanjeJaja(2,100);
+
+    return 0;
+}
+
+vremenska kompleksnost :  O ( n * k * k )
+pomocni prostor :  O ( n * k )

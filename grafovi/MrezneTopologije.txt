@@ -1,0 +1,78 @@
+/*
+Naziv : Network Topology
+Tagovi : graphs, implementation
+Tezina : 1200
+Vremenska kompleksnost :  O( V * E )
+*/
+
+
+
+#include <iostream>
+#include <list>
+
+using namespace std;
+
+class Graf {
+    int V;
+    list<int> *lista;
+public:
+    Graf(int V) {
+        this->V = V;
+        lista = new list<int> [V];
+    }
+    void DodajGranu(int u, int v) {
+        lista[u].push_back(v);
+        lista[v].push_back(u);
+    }
+    void IspisiTopologiju();
+
+};
+
+void Graf::IspisiTopologiju() {
+    int brojCvorovaStepena1 = 0;
+    int brojCvorovaStepena2 = 0;
+    int brojCvorovaStepenaN_1 = 0;      // broj cvorova stepena N-1
+
+    for(int i = 1; i < V; i++) {
+        int stepen = lista[i].size();
+        if(stepen == 1) {
+            brojCvorovaStepena1++;
+        }else if(stepen == 2) {
+            brojCvorovaStepena2++;
+        }else if(stepen == V-2){
+             brojCvorovaStepenaN_1++;
+        }
+    }
+
+    if(brojCvorovaStepena1 == 2 && brojCvorovaStepena2 == V - 1 - brojCvorovaStepena1) {
+        cout << "Topologija magistrala" << endl;
+    }else if(brojCvorovaStepena2 == V - 1) {
+        cout << "Topologija prsten" << endl;
+    }else if(brojCvorovaStepena1 == V - 2 && brojCvorovaStepenaN_1 == 1) {
+        cout << "Topologija zvijezda" << endl;
+    }else {
+        cout << "Nepoznata topologija" << endl;
+    }
+
+}
+
+
+
+int main()
+{
+    int n,m;
+    cin >> n >> m;
+
+    Graf g(n+1);
+
+    for(int i = 1; i <= m; i++){
+        int cvor1,cvor2;
+        cin >> cvor1 >> cvor2;
+        g.DodajGranu(cvor1,cvor2);
+    }
+
+    g.IspisiTopologiju();
+
+
+    return 0;
+}

@@ -1,0 +1,50 @@
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+void Ispisi(stack<int> S) {
+
+    while(!S.empty()) {
+
+        cout << S.top() << " ";
+        S.pop();
+    }
+
+    cout << endl;
+}
+
+void IzbrisiSrednji(stack<int> &S, int n, int trenutni = 0) {
+
+    if(S.empty() || trenutni == n) {
+        return ;
+    }
+
+    int x = S.top();
+    S.pop();
+
+    IzbrisiSrednji(S,n,trenutni+1);
+
+    if(trenutni != n/2) {
+        S.push(x);
+    }
+
+}
+
+
+
+int main()
+{
+    stack<int> S;
+    S.push(1);
+    S.push(2);
+    S.push(3);
+    S.push(4);
+    S.push(5);
+
+    Ispisi(S);
+    IzbrisiSrednji(S,S.size());
+    Ispisi(S);
+
+   return 0;
+}

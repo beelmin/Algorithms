@@ -1,0 +1,68 @@
+Dat je skup elemenata. Potrebno je utvrditi da li se dati skup moze podijeliti u 2 podskupa tako da je suma oba podskupa ista.
+
+Izracunamo sumu elemenata u skupu.
+Ako je suma neparna, to odma znaci da ne moze.
+Ako je suma parna, onda trazimo da li u skupu postoji podskup sa sumom suma/2.
+
+Dakle, ovaj zadatak se svodi na zadatak PodskupSuma.
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+bool Particija(vector<int> &skup, int suma) {
+
+    int n = skup.size();
+    vector<vector<bool> > dp(n+1, vector<bool>(suma+1));
+
+    // ako je suma = 0 onda je true
+    for(int i = 0; i <= n; i++) {
+        dp[i][0] = true;
+    }
+
+    // ako je skup prazan a suma > 0 onda je false
+    for(int i = 1; i <= suma; i++) {
+        dp[0][i] = false;
+    }
+
+    for(int i = 1; i <= n; i++) {
+        for(int j = 1; j <= suma; j++) {
+            //ako je element veci od sume, ne ukljucujemo ga
+            if(skup[i-1] > j) {
+                dp[i][j] = dp[i-1][j];
+            }
+            // ako je element manji ili jednak sumi
+            if(skup[i-1] <= j) {
+                dp[i][j] = dp[i-1][j-skup[i-1]] || dp[i-1][j];
+
+            }
+            // dp[i-1][j] - nismo ukljucili element i gledamo istu sumu
+            // dp[i-1][j-skup[i-1]] - ukljucili smo element i gledamo suma = suma - taj broj sto smo ukljucili
+        }
+    }
+
+    return dp[n][suma];
+
+}
+
+
+int main()
+{
+
+    vector<int> skup = {1, 5, 11, 5};
+    int n = skup.size();
+    int suma = 0;
+    for(int i = 0; i < n; i++) {
+        suma += skup[i];
+    }
+
+    if(suma % 2 != 0) {
+        cout << false << endl;
+    }else {
+        cout << Particija(skup,suma/2) << endl;
+    }
+
+
+    return 0;
+}

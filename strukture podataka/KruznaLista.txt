@@ -1,0 +1,89 @@
+#include <iostream>
+
+using namespace std;
+
+struct Cvor {
+    int element;
+    Cvor *sljedeci;
+};
+
+class KruznaLista {
+    int velicina;
+    Cvor *pocetak;
+    Cvor *kraj;
+public:
+    KruznaLista() : velicina(0), pocetak(nullptr), kraj(nullptr) {}
+    void Umetni(const int &x);
+    void Obrisi(Cvor *pok);
+    int DajPrvi() { return pocetak->element; }
+    int DajZadnji() { return kraj->element; }
+    int PoslijeZadnjeg() { return kraj->sljedeci->element; }
+    void JosipovProblem(int index);
+    void Ispisi();
+};
+
+void KruznaLista::Umetni(const int &x){
+    Cvor *novi = new Cvor;
+    novi->element = x;
+    novi->sljedeci = nullptr;
+    if(velicina == 0){
+        pocetak = novi;
+        kraj = novi;
+    }else{
+        kraj->sljedeci = novi;
+        novi->sljedeci = pocetak;
+        kraj = novi;
+    }
+    velicina++;
+}
+
+void KruznaLista::Obrisi(Cvor *pok){
+    Cvor *temp = pok->sljedeci;
+    if(pok->sljedeci == pocetak){
+        kraj->sljedeci = pocetak->sljedeci;
+        pocetak = pocetak->sljedeci;
+        delete temp;
+    }else if(pok->sljedeci == kraj){
+        pok->sljedeci = pocetak;
+        kraj = pok;
+        delete temp;
+    }else{
+        pok->sljedeci = pok->sljedeci->sljedeci;
+        delete temp;
+    }
+    velicina--;
+}
+
+void KruznaLista::JosipovProblem(int index) {
+    Cvor *p = kraj;
+    while(velicina > 1){
+        for(int i = 1; i < index; i++){
+            p = p->sljedeci;
+        }
+        Obrisi(p);
+    }
+}
+
+void KruznaLista::Ispisi() {
+    Cvor *p = pocetak;
+    while(p != kraj){
+        cout << p->element << " ";
+        p = p->sljedeci;
+    }
+    cout << p->element << endl;
+}
+
+int main()
+{
+    KruznaLista proba;
+    proba.Umetni(1);
+    proba.Umetni(2);
+    proba.Umetni(3);
+    proba.Umetni(4);
+    proba.Umetni(5);
+    proba.Umetni(6);
+    proba.Umetni(7);
+    proba.JosipovProblem(3);
+    proba.Ispisi();
+    return 0;
+}

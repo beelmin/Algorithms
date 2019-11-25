@@ -1,0 +1,22 @@
+Dat je niz u kojem se nalazi "n" cijelih brojeva. Odrediti broj razlicitih elemenata niza.
+
+
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+    int niz[] = {3,5,6,3,4,6,7};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    sort(niz, niz + n);
+    int brojac(1);
+    for(int i = 1; i < n; i++) {
+        if(niz[i] != niz[i-1]){
+            brojac++;
+        }
+    }
+    cout << brojac;
+    return 0;
+}

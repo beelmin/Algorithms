@@ -1,0 +1,48 @@
+Dat nam je skup nenegativnih brojeva i suma X. Potrebno je utvrditi da li u skupu postoji neki podskup cija je suma elemenata jednaka sumi X.
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+
+int main()
+{
+
+    vector<int> skup = {3, 34, 4, 12, 5, 2};
+    int suma = 9;
+    int n = skup.size();
+
+    vector<vector<bool> > dp(n+1, vector<bool>(suma+1));
+
+    // ako je suma = 0 onda je true
+    for(int i = 0; i <= n; i++) {
+        dp[i][0] = true;
+    }
+
+    // ako je skup prazan a suma > 0 onda je false
+    for(int i = 1; i <= suma; i++) {
+        dp[0][i] = false;
+    }
+
+    for(int i = 1; i <= n; i++) {
+        for(int j = 1; j <= suma; j++) {
+            //ako je element veci od sume, ne ukljucujemo ga
+            if(skup[i-1] > j) {
+                dp[i][j] = dp[i-1][j];
+            }
+            // ako je element manji ili jednak sumi
+            if(skup[i-1] <= j) {
+                dp[i][j] = dp[i-1][j-skup[i-1]] || dp[i-1][j];
+
+            }
+            // dp[i-1][j] - nismo ukljucili element i gledamo istu sumu
+            // dp[i-1][j-skup[i-1]] - ukljucili smo element i gledamo suma = suma - taj broj sto smo ukljucili
+        }
+    }
+
+    cout << dp[n][suma] << endl;
+
+
+    return 0;
+}

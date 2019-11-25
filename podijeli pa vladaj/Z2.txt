@@ -1,0 +1,37 @@
+Niz prvo raste, pa zatim opada. Naci najveci element
+
+#include <iostream>
+
+using namespace std;
+
+int binarna_pretraga(int niz[], int pocetak, int kraj) {
+    if(pocetak == kraj){                // ako niz ima 1 element
+        return niz[pocetak];
+    }
+    if(kraj == pocetak + 1){                  // ako niz ima 2 elementa
+        if(niz[pocetak] >= niz[kraj]){
+            return niz[pocetak];
+        }else{
+            return niz[kraj];
+        }
+    }
+    int sredina = (pocetak + kraj) / 2;
+    if(niz[sredina] > niz[sredina+1] && niz[sredina] > niz[sredina-1]){
+        return niz[sredina];
+    }
+    if(niz[sredina] > niz[sredina+1] && niz[sredina] < niz[sredina-1]){
+        return binarna_pretraga(niz,pocetak,sredina-1);
+    }else{
+        return binarna_pretraga(niz,sredina+1,kraj);
+    }
+}
+
+int main()
+{
+    int niz[] = {1,2,3,4,2,1};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    cout << binarna_pretraga(niz,0,n-1);
+    return 0;
+}
+
+vremenska kompleksnost : O(log(n))

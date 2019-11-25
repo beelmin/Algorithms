@@ -1,0 +1,75 @@
+
+// Ako je cvor bijel, to znaci da nije procesuiran ( obradjen )
+// inicijalno, svi cvorovi su bijeli
+
+// Ako je cvor siv, to znaci da je u obradi ( obradjuju se njegovi potomci )
+
+// Ako je cvor crn, to znaci da su cvor i svi njegovi potomci obradjeni
+
+
+#include <iostream>
+#include <list>
+#include <vector>
+
+using namespace std;
+
+enum Boje {BIJELA, SIVA, CRNA};
+
+class Graf {
+    int V;
+    list<int> *lista;
+    bool DFS(int cvor, vector<int> &boje);
+public:
+    Graf(int V) {
+        this->V = V;
+        lista = new list<int> [V];
+    }
+    void DodajGranu(int u, int v) {
+        lista[u].push_back(v);
+    }
+    bool PostojiCiklus();
+
+};
+
+bool Graf::DFS(int cvor, vector<int> &boje) {
+    boje[cvor] = SIVA;
+    list<int>::iterator it;
+    for(it = lista[cvor].begin(); it != lista[cvor].end(); it++) {
+        if(boje[*it] == SIVA) {
+            return true;
+        }
+        if(boje[*it] == BIJELA && DFS(*it,boje)) {
+            return true;
+        }
+    }
+    boje[cvor] = CRNA;
+    return false;
+}
+
+bool Graf::PostojiCiklus() {
+    vector<int> boje(V,BIJELA);
+    for(int i = 0; i < V; i++) {
+        if(boje[i] == BIJELA && DFS(i,boje)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+int main()
+{
+    Graf g(5);
+    g.DodajGranu(0,1);
+    g.DodajGranu(1,2);
+    g.DodajGranu(1,3);
+    g.DodajGranu(2,4);
+    g.DodajGranu(3,4);
+    g.DodajGranu(4,0);
+
+    cout << g.PostojiCiklus();
+
+    return 0;
+}
+
+vremenska kompleksnost : O(V+E)

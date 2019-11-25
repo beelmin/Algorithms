@@ -1,0 +1,62 @@
+Usmjereni graf
+
+#include <iostream>
+#include <list>
+#include <vector>
+
+using namespace std;
+
+
+class Graf {
+    int V;
+    list<int> *lista;
+    void DFS(int v, vector<bool> &posjecen);
+public:
+    Graf(int V);
+    void DodajGranu(int v, int w);
+    void DFS();
+};
+
+Graf::Graf(int V) {
+    this->V = V;
+    lista = new list<int>[V];
+}
+
+void Graf::DodajGranu(int v, int w){
+    lista[v].push_back(w);
+}
+
+void Graf::DFS(int v, vector<bool> &posjecen) {
+    posjecen[v] = true;
+    cout << v << " ";
+    list<int>::iterator it;
+    for(it = lista[v].begin(); it != lista[v].end(); it++) {
+        if(!posjecen[*it]){
+            DFS(*it,posjecen);
+        }
+    }
+}
+
+void Graf::DFS() {
+    vector<bool> posjecen(V,false);
+    for(int i = 0; i < V; i++){
+        if(posjecen[i] == false){
+            DFS(i,posjecen);
+        }
+    }
+}
+
+
+int main() {
+   Graf g(4);
+   g.DodajGranu(0, 1);
+   g.DodajGranu(0, 2);
+   g.DodajGranu(1, 2);
+   g.DodajGranu(2, 0);
+   g.DodajGranu(2, 3);
+   g.DodajGranu(3, 3);
+   g.DFS();
+   return 0;
+}
+
+vremenska kompleknost : O(V + E)

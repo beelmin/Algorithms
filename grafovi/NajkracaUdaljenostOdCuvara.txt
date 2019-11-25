@@ -1,0 +1,99 @@
+Data je matrica koja je popunjena sa 'O', 'G','W' pri cemu 
+'O' predstavlja open space tj slobodno podrucje
+'G' predstavlja guard tj cuvar
+'W' predstavlja wall tj zid
+
+Izlazna je matrica takva da je 'G' zamjenjen sa 0, 'W' sa -1, a 'O' sa najkracim udaljenostima od 'G'
+
+Ideja:
+ Prvo u red dodati sve 'G'. Za svaki 'G' gledamo njegova 4 susjeda. Ako je neki od susjeda 'O' izracunamo udaljenost, spremimo je u izlaznu matricu i
+ dodamo susjeda u red. Dakle, koristimo BFS.
+
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+const int m = 5;
+const int n = 5;
+
+struct cvor {
+    int i;
+    int j;
+    int udaljenost;
+};
+
+bool ValidanIndex(int i, int j) {
+    if( (i < 0 || i >= n) || ( j < 0 || j >= m)) {
+        return false;
+    }
+
+    return true;
+}
+
+bool JeLiSlobodno(int i, int j, char matrica[m][n], int izlaz[m][n]){
+    if(matrica[i][j] == 'O' && izlaz[i][j] == -1) {                      
+        return true;
+    }
+
+    return false;
+}
+
+void NadjiUdaljenosti(char matrica[m][n]) {
+    int izlaz[m][n];
+    queue<cvor> Q;
+
+    for(int i = 0; i < m; i++) {
+        for(int j = 0; j < n; j++) {
+            if(matrica[i][j] == 'G'){
+                Q.push({i,j,0});
+                izlaz[i][j] = 0;
+            }else{
+                izlaz[i][j] = -1;
+            }
+        }
+    }
+
+    int red[] = { -1, 0, 1, 0 };
+    int kolona[] = { 0, 1, 0, -1 };
+
+    while(!Q.empty()) {
+        cvor trenutni = Q.front();
+        Q.pop();
+        int x = trenutni.i;
+        int y = trenutni.j;
+        int udaljenost = trenutni.udaljenost;
+        
+        for(int i = 0; i < 4; i++) {
+            if(JeLiSlobodno(x+red[i],y+kolona[i],matrica,izlaz) && ValidanIndex(x+red[i],y+kolona[i])) {
+                izlaz[x+red[i]][y+kolona[i]] = udaljenost + 1;
+                Q.push({x+red[i],y+kolona[i],udaljenost+1});
+            }
+        }
+    }
+
+    for(int i = 0; i < m; i++) {
+        for(int j = 0; j < n; j++) {
+            cout << izlaz[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+}
+
+int main(){
+
+    char matrica[m][n] = { {'O', 'O', 'O', 'O', 'G'},
+                           {'O', 'W', 'W', 'O', 'O'},
+                           {'O', 'O', 'O', 'W', 'O'},
+                           {'G', 'W', 'W', 'W', 'O'},
+                           {'O', 'O', 'O', 'O', 'G'}
+                         };
+
+
+    NadjiUdaljenosti(matrica);
+
+    return 0;
+}
+
+vremenska kompleksnost :  O ( m * n )

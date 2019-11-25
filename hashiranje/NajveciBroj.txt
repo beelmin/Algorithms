@@ -1,0 +1,43 @@
+Dat je niz brojeva pri cemu su svi brojevi razliciti. Potrebno je pronaci najveci "d" takav da je d = a + b + c
+
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <cmath>
+
+using namespace std;
+
+
+int main() {
+
+    vector<int> v = {2, 3, 5, 7, 12 };
+    int n = v.size();
+
+    unordered_map<int, pair<int,int> > mapa;
+
+    for(int i = 0; i <= n-2; i++) {
+        for(int j = i+1; j < n; j++) {
+            mapa[v[i]+v[j]] = make_pair(i,j);
+        }
+    }
+
+    int d = INT_MIN;
+    for(int i = 0; i <= n-2; i++) {
+        for(int j = i+1; j < n; j++) {
+
+            int razlika = abs(v[i]-v[j]);
+            if(mapa.find(razlika) != mapa.end()) {
+
+                pair<int,int> temp = mapa[razlika];
+                if(temp.first != i && temp.first != j && temp.second != i && temp.second != j) {
+
+                    d = max(d,max(v[i],v[j]));
+                }
+            }
+        }
+    }
+
+    cout << d << endl;
+
+    return 0;
+}

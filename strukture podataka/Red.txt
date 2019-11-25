@@ -1,0 +1,84 @@
+#include <iostream>
+
+using namespace std;
+
+class Red {
+    struct Cvor {
+        int element;
+        Cvor *sljedeci;
+    };
+    int velicina;
+    Cvor *pocetak;      // pokazivac na pocetak reda
+    Cvor *kraj;         // pokazivac na kraj reda
+public:
+    Red() : velicina(0), pocetak(nullptr), kraj(nullptr) {}
+    void StaviURed(const int &x);
+    void IzbaciIzReda();
+    int &ElementNaCelu() const;
+    bool JeLiPrazan() const { return pocetak == nullptr; }
+    int Duzina() const { return velicina; }
+    void IspisReda() const;
+    void Brisi();
+    ~Red() { Brisi(); }
+};
+
+void Red::StaviURed(const int &x) {
+    Cvor *novi = new Cvor;
+    novi->element = x;
+    novi->sljedeci = nullptr;
+    if(velicina == 0){
+        pocetak = novi;
+        kraj = novi;
+    }else{
+        kraj->sljedeci = novi;
+        kraj = novi;
+    }
+    velicina++;
+}
+
+void Red::IzbaciIzReda() {
+    if(velicina == 0) {
+        throw "Red je prazan";
+    }
+    Cvor *pomocni;
+    pomocni = pocetak;
+    if(velicina == 1){
+        pocetak = nullptr;
+        kraj = nullptr;
+    }else{
+        pocetak = pomocni->sljedeci;
+    }
+    delete pomocni;
+    velicina--;
+}
+
+int &Red::ElementNaCelu() const {
+    if(velicina == 0) {
+        throw "Red je prazan";
+    }
+    return pocetak->element;
+}
+
+void Red::IspisReda() const {
+    for(Cvor *p = pocetak; p != nullptr; p = p->sljedeci){
+        cout << p->element << endl;
+    }
+}
+
+void Red::Brisi() {
+    while(JeLiPrazan() == false){
+        IzbaciIzReda();
+    }
+}
+
+int main()
+{
+    Red red;
+    red.StaviURed(5);
+    red.StaviURed(10);
+    red.StaviURed(15);
+    red.IspisReda();
+
+
+    return 0;
+}

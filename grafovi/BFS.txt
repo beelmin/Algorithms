@@ -1,0 +1,74 @@
+Usmjereni graf
+
+
+#include <iostream>
+#include <list>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+
+class Graf {
+    int V;
+    list<int> *lista;
+    void BFS(int v, vector<bool> &posjecen);
+public:
+    Graf(int V);
+    void DodajGranu(int v, int w);
+    void BFS();
+};
+
+Graf::Graf(int V) {
+    this->V = V;
+    lista = new list<int>[V];
+}
+
+void Graf::DodajGranu(int v, int w){
+    lista[v].push_back(w);
+}
+
+void Graf::BFS(int v, vector<bool> &posjecen){
+    posjecen[v] = true;
+
+    queue<int> q;
+    q.push(v);
+    list<int>::iterator it;
+
+    while(!q.empty()) {
+        int a = q.front();
+        cout << a << " ";
+        q.pop();
+        for(it = lista[a].begin(); it != lista[a].end(); it++){
+            if(!posjecen[*it]){
+                posjecen[*it] = true;
+                q.push(*it);
+            }
+        }
+    }
+}
+
+void Graf::BFS() {
+    vector<bool> posjecen(V,false);
+    for(int i = 0; i < V; i++) {
+        if(posjecen[i] == false){
+            BFS(i,posjecen);
+        }
+    }
+}
+
+
+
+int main() {
+   Graf g(4);
+   g.DodajGranu(0, 1);
+   g.DodajGranu(0, 2);
+   g.DodajGranu(1, 2);
+   g.DodajGranu(2, 0);
+   g.DodajGranu(2, 3);
+   g.DodajGranu(3, 3);
+   g.BFS();
+   return 0;
+}
+
+vremenska kompleksnost : O(V + E)

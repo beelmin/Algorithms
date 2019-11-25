@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+bool DFS(vector<vector<char> > &mat,int red,int kolona,vector<vector<bool> > &posjecen){
+
+  posjecen[red][kolona] = true;
+  if(mat[red][kolona] == 'B'){
+    return true;
+  }
+  bool rez =false;
+  if(red > 0 && !posjecen[red-1][kolona] && mat[red-1][kolona] != '#'){
+    if(DFS(mat,red-1,kolona,posjecen))
+      rez = true;
+  }
+  if(kolona > 0 && !posjecen[red][kolona-1] && mat[red][kolona-1] != '#'){
+    if(DFS(mat,red,kolona-1,posjecen))
+      rez = true;
+  }
+  if(red+1 < mat.size() && !posjecen[red+1][kolona] && mat[red+1][kolona] != '#'){
+    if(DFS(mat,red+1,kolona,posjecen))
+      rez = true;
+  }
+  if(kolona+1 < mat[0].size() && !posjecen[red][kolona+1] && mat[red][kolona+1] != '#'){
+    if(DFS(mat,red,kolona+1,posjecen))
+      rez = true;
+  }
+  return rez;
+}
+
+bool PostojiPut(vector<vector<char> > &mat){
+  int redA,kolonaA;
+  vector<vector<bool> > posjecen(mat.size());
+  for(int i = 0;i < mat.size(); i++){
+    posjecen[i].resize(mat[0].size());
+    for(int j = 0; j < mat[0].size(); j++){
+      posjecen[i][j] = false;
+      if(mat[i][j] == 'A'){
+        redA = i;
+        kolonaA = j;
+      }
+    }
+  }
+
+  return DFS(mat,redA,kolonaA,posjecen);
+
+}
+
+int main() {
+  int n;
+  cin >> n;
+  vector<vector<char> > mat(n);
+  for(int i = 0; i < n; i++){
+    mat[i].resize(n);
+    for(int j = 0; j < n; j++){
+      cin >> mat[i][j];
+    }
+  }
+  if(PostojiPut(mat)){
+    cout << "Put postoji" << endl;
+  }else{
+    cout << "Put ne postoji" << endl;
+  }
+}

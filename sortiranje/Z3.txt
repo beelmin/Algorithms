@@ -1,0 +1,28 @@
+Ema je otisla po malog brata u skolu i odlucila je nagraditi djecu jabukama. Kupila je dva puta vise jabuka od broja djece racunajuci na to da svakom
+djetetu da po dvije jabuku. Ali primjetila je da su jabuke razlicitih tezina. Ona bi htjela da svakom djetetu da par jabuka iste tezine, ali ona nije sigurna da 
+li je to uopce moguce uraditi pa imamo zadatak da napravimo koji to odredjuje.
+
+ideja : sortiramo i gledamo zbir prvog i zadnjeg, drugog i predzadnjeg itd itd
+
+
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+    int niz[] = {5,11,14,7,4,13,8};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    sort(niz, niz + n);
+    int suma(niz[0] + niz[n-1]);
+    int moguce(true);
+    for(int i = 1; i < n/2; i++){
+        if(niz[i] + niz[n-1-i] != suma){
+            moguce = false;
+            break;
+        }
+    }
+    cout << moguce;
+    return 0;
+}

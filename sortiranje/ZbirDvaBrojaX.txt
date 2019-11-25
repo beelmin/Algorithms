@@ -1,0 +1,31 @@
+Dat je niz i broj X. Treba provjeriti da li u nizu postoje 2 broja cija je suma jednaka X.
+
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+    int niz[] = {1, 4, 45, 6, 10, -8};
+    int x = 16;
+    int n = sizeof(niz) / sizeof(niz[0]);
+    sort(niz, niz + n);
+    int pocetak = 0;
+    int kraj = n-1;
+    int postoji(false);
+    while(pocetak < kraj){
+        if(niz[pocetak] + niz[kraj] == x){
+           postoji = true;
+           break;
+        }else if(niz[pocetak] + niz[kraj] < x) {
+            pocetak++;
+        }else{
+            kraj--;
+        }
+    }
+    cout << postoji;
+    return 0;
+}
+
+vremenska kompleksnost: O(n*logn)

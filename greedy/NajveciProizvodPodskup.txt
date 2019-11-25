@@ -1,0 +1,66 @@
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int MaxProizvod(vector<int> &v) {
+
+    int n = v.size();
+    int br_negativnih = 0;
+    int br_nula = 0;
+    int najveci_negativni = INT_MIN;
+    int proizvod = 1;
+
+    for(int i = 0; i < n; i++) {
+
+        if(v[i] == 0) {
+            br_nula++;
+            continue;
+        }
+
+        if(v[i] < 0) {
+            br_negativnih++;
+            najveci_negativni = max(najveci_negativni,v[i]);
+        }
+
+        proizvod *= v[i];
+    }
+
+    if(br_nula == n) {
+        return 0;
+    }
+    if(br_negativnih == 0) {    // primjer 0 0 1 2 3  rez je 6
+        return proizvod;
+    }
+
+    if(br_negativnih % 2 != 0) {
+
+        if(br_negativnih == 1 && br_nula == n-1) {   // primjer -1 0 0 0 ili -1 0
+            return 0;
+        }
+
+        proizvod = proizvod / najveci_negativni;   // primjer  -5 -4 -3 0 0 1 2 3 rez je 120
+        return proizvod;
+    }
+
+    if(br_negativnih % 2 == 0 && br_negativnih != 0) {
+        return proizvod;
+    }
+
+}
+
+
+
+
+int main()
+{
+
+   vector<int> v = {-4,-3,-2,0,1,2};
+
+   cout << MaxProizvod(v);
+
+
+   return 0;
+}

@@ -1,0 +1,45 @@
+Data su dva stringa. Potrebno je konvertovati prvi u drugi pri cemu je dozvoljeno koristiti sljedece 3 operacije :
+- mozemo dodati karakter u prvi string
+- mozemo izbaciti karakter iz prvog stringa
+- mozemo zamijeniti karakter
+
+Potrebno je naci minimalan broj operacija da bi stringovi bili ekvivalentni
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+
+int main()
+{
+    string prvi = "sunday";
+    string drugi = "saturday";
+
+    int n = prvi.size();
+    int m = drugi.size();
+
+    vector<vector<int> > tablica(n+1);
+
+    for(int i = 0; i <= n; i++) {
+        tablica[i].resize(m+1);
+        for(int j = 0; j <= m; j++) {
+            if(i == 0) {            // ako je prvi string prazan, moramo sva slova iz drugog stringa ubacit u prvi
+                tablica[i][j] = j;
+            }else if(j == 0) {      // ako je drugi string prazan, moramo sva slova iz prvog stringa izbrisati
+                tablica[i][j] = i;
+            }else if(prvi[i-1] == drugi[j-1]){      // ako imaju ista slova na istim pozicijama, zanemarujemo
+                tablica[i][j] = tablica[i-1][j-1];
+            }else{
+                tablica[i][j] = 1 + min(tablica[i-1][j],        // brisanje iz prvog
+                                        min(tablica[i-1][j-1],  // zamjena
+                                            tablica[i][j-1]) );  // umetanje u prvi
+            }
+        }
+    }
+
+    cout << "Min. broj op. da se prvi string konvertuje u drugi je : " << tablica[n][m] << endl;
+
+    return 0;
+}

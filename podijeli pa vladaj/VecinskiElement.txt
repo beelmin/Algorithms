@@ -1,0 +1,50 @@
+Da li se zadati element pojavljuje vise od n/2 puta u sortiranom nizu duzine n
+
+#include <iostream>
+
+using namespace std;
+
+/* Check if arr[mid] is the first occurrence of x.
+            arr[mid] is first occurrence if x is one of the following
+            is true:
+            (i) mid == 0 and arr[mid] == x
+            (ii) arr[mid-1] < x and arr[mid] == x
+        */
+
+int binarna_pretraga(int niz[], int pocetak, int kraj,int x) {
+    if(pocetak <= kraj) {
+        int sredina = (pocetak + kraj) / 2;
+        if(niz[sredina] == x && (niz[sredina-1] < x || sredina == 0)){
+            return sredina;
+        }
+        if(x > niz[sredina]) {
+            return binarna_pretraga(niz,sredina+1,kraj,x);
+        }else{
+            return binarna_pretraga(niz,pocetak,sredina-1,x);
+        }
+    }
+    return -1;
+}
+
+bool VecinskiElement(int niz[], int n, int x) {
+    int i = binarna_pretraga(niz,0,n-1,x);
+    if(i == -1){
+        return false;
+    }
+    if((i + n/2) <= n-1 && niz[i + n/2] == x){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+
+int main()
+{
+    int niz[] = {1, 2, 3, 3, 3, 3, 10};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    cout << VecinskiElement(niz,n,3);
+    return 0;
+}
+
+vremenska kompleksnost :  O(log(n))

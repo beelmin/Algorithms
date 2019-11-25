@@ -1,0 +1,96 @@
+/*
+Naziv : Cyclic Components
+Tagovi : dfs and similar, dsu, graphs
+Tezina : 1500
+Vremenska kompleksnost :  O( V * ( V + E ) )
+*/
+
+
+#include <iostream>
+#include <list>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+class Graf {
+    int V;
+    list<int> *lista;
+    vector<int> BFS(int cvor, vector<bool> &posjecen);
+public:
+    Graf(int V) {
+        this->V = V;
+        lista = new list<int> [V];
+    }
+    void DodajGranu(int u, int v) {
+        lista[u].push_back(v);
+        lista[v].push_back(u);
+    }
+    int KomponentePovezanosti();
+
+};
+
+vector<int> Graf::BFS(int cvor, vector<bool> &posjecen) {
+    vector<int> rez;
+    posjecen[cvor] = true;
+    queue<int> Q;
+    Q.push(cvor);
+    list<int>::iterator it;
+    while(!Q.empty()) {
+        int trenutni = Q.front();
+        rez.push_back(trenutni);
+        Q.pop();
+        for(it = lista[trenutni].begin(); it != lista[trenutni].end(); ++it) {
+            if(!posjecen[*it]){
+                posjecen[*it] = true;
+                Q.push(*it);
+            }
+        }
+    }
+
+    return rez;
+}
+
+int Graf::KomponentePovezanosti() {
+    vector<bool> posjecen(V,false);
+    int broj = 0;
+    for(int i = 1; i < V; i++) {
+        if(!posjecen[i]){
+            vector<int> rezultat = BFS(i,posjecen);
+            bool flag = true;
+            for(int j = 0; j <rezultat.size(); j++) {
+                if(lista[rezultat[j]].size() == 2) {
+                    continue;
+                }else{
+                    flag = false;
+                    break;
+                }
+            }
+            if(flag == true) {
+                broj++;
+            }
+        }
+    }
+    
+    return broj;
+}
+
+
+
+
+int main()
+{
+
+    int n,m;
+    cin >> n >> m;
+    Graf g(n+1);
+    for(int i = 1; i <= m; i++) {
+        int cvor1,cvor2;
+        cin >> cvor1 >> cvor2;
+        g.DodajGranu(cvor1,cvor2);
+    }
+
+    cout << g.KomponentePovezanosti();
+
+    return 0;
+}

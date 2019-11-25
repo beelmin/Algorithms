@@ -1,0 +1,30 @@
+Dato je "n" cvorova i za svaki cvor je dat njegov stepen. Provjeri da li dati skup cvorova predstavlja stablo ili graf. Mozemo pretpostaviti da je graf povezan.
+
+Znamo da za stablo vrijedi da ako ima "n" cvorova onda ima i tacno "n-1" grana.
+Isto tako, da bi povezali graf od "n" cvorova treba nam najmanje "n-1" grana.
+
+
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+    int n = 5;
+    int stepeni[] = {2,3,1,1,1};
+    
+    int suma = 0;
+    for(int i = 0; i < n; i++) {
+        suma += stepeni[i];
+    }
+    
+    if(suma == 2*(n-1)){
+        cout << "Stablo";
+    }else{
+        cout << "Graf";
+    }
+    
+
+    return 0;
+}

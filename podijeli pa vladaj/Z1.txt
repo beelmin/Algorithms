@@ -1,0 +1,41 @@
+Dat je niz u rastucem poretku i dat je element X. Treba provjeriti da li postoji element u nizu koji je manji ili jednak od X.
+
+ideja :  modifikovat binarnu pretragu
+
+#include <iostream>
+
+using namespace std;
+
+int trazi(int niz[], int pocetak, int kraj, int x) {
+    if(pocetak > kraj){
+        return -1;
+    }
+    if(x >= niz[kraj]){
+        return kraj;
+    }
+    int mid = (pocetak + kraj)/2;
+    if(x == niz[mid]){
+        return mid;
+    }
+    if(mid > 0 && niz[mid-1] <= x && x < niz[mid]){
+        return mid-1;
+    }
+    if(x < niz[mid]){
+        return trazi(niz,pocetak,mid-1,x);
+    }else{
+        return trazi(niz,mid+1,kraj,x);
+    }
+}
+
+int main()
+{
+    int niz[] = {1, 2, 4, 6, 10, 12, 14};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    int x = 15;
+    cout << trazi(niz,0,n-1,x);
+
+    return 0;
+}
+
+
+vremenska kompleksnost :  O(log(n))

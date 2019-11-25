@@ -1,0 +1,43 @@
+Data su dva niza sa istom velicinom. Potrebno je transformisati prvi niz da postane isti kao drugi sa minimalnim brojem operacija.
+Pod operacijom podrazumijevamo da svaki broj mozemo povecati ili smanjiti za 1. Ne mora biti isti redoslijed brojeva u prvom i drugom nizu
+
+Primjer
+
+A = [ 3, 1 , 1 ]
+B = [ 1 , 2 , 2 ]
+
+Rjesenje
+
+U nizu A, smanjimo 3 za 1, a bilo koju jedinicu povecamo za 1 
+Dobivamo A = [ 2, 2, 1 ] sto je permutacija od B
+
+Algoritam :
+1. sortiramo oba niza u rastucem poretku
+2. uzimamo apsolutnu razliku elemenata tj, prvi sa prvim, drugi sa drugim itd
+
+
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+
+using namespace std;
+
+int MinOperacija(int A[], int B[], int n) {
+    sort(A, A + n);
+    sort(B, B + n);
+    int rezultat(0);
+    for(int i = 0; i < n; i++){
+            rezultat += abs(A[i] - B[i]);
+    }
+    return rezultat;
+}
+
+int main()
+{
+    int A[] = {3,1,1};
+    int B[] = {1,2,2};
+    cout << MinOperacija(A,B,3);
+    return 0;
+}
+
+vremenska kompleksnost :  O(nlog(n))

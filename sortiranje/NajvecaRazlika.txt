@@ -1,0 +1,26 @@
+Dat je niz cijelih brojeva. Potrebno je naci najvecu razliku izmedju neka 2 broja tako da je veci element poslije manjeg elementa.
+
+#include <iostream>
+
+using namespace std;
+
+int main() {
+
+    int niz[] = {2,3,10,6,1,8,11,4};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    int rez = 0;
+    int Min = niz[0];
+    for(int i = 1; i < n; i++) {
+        if(niz[i] - Min > rez ) {
+            rez = niz[i] - Min;
+        }
+        Min = min(Min,niz[i]);
+
+    }
+
+    cout << rez;
+
+    return 0;
+}
+
+vremenska kompleknost:  O(n)

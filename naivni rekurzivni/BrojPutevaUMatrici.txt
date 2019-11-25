@@ -1,0 +1,25 @@
+Data je matrica m x n. Koliko postoji puteva da se dodje od pozicije (0,0) do (m-1,n-1) ?
+
+naivni rekurzivni algoritam
+
+#include <iostream>
+
+using namespace std;
+
+int brojPuteva(int m, int n) {
+    if(m == 1 || n == 1) {
+        return 1;
+    }
+    return brojPuteva(m-1,n) + brojPuteva(m,n-1);
+}
+
+int main()
+{
+    int m = 3;
+    int n = 3;
+    cout << brojPuteva(m,n);
+    return 0;
+}
+
+vremenska kompleknost :  u najgorem slucaju eksponencijalna jer se podproblemi ponavljaju
+

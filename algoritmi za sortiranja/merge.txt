@@ -1,0 +1,55 @@
+#include <iostream>
+
+using namespace std;
+
+void Merge(int niz[], int pocetak, int kraj_prvog, int pocetak_drugog, int kraj) {
+    int i(0);                           // pocetna pozicija prvog podniza
+    int j(pocetak_drugog - pocetak);    // pocetna pozicija drugog podniza
+    int k(pocetak);                     // pocetna pozicija sortiranog niza koji je rezultat
+    int *pomocni = new int[kraj - pocetak + 1];
+    for(int m = 0; m <= kraj - pocetak; m++){
+        pomocni[m] = niz[pocetak + m];          // prvo stavili elemente prvog sortiranog podniza pa zatim elemente drugog sortiranog podniza u pomocni niz
+    }
+    while(i <= kraj_prvog - pocetak && j <= kraj - pocetak) {
+        if(pomocni[i] < pomocni[j]){                                // poredimo prvi element prvog sortiranog podniza i prvi element drugog sort. podniza
+            niz[k] = pomocni[i];                                    // uzimamo manji i stavljamo ga na prvo mjesto sortiranog niza koji je rezz
+            i++;
+        }else{
+            niz[k] = pomocni[j];
+            j++;
+        }
+        k++;                                // nakon zavrste while-a ostat ce elementi u jednom podnizu, prvom ili drugom
+    }
+    while(i <= kraj_prvog - pocetak){       // stavimo elemente iz prvog sortiranog podniza koji su ostali
+        niz[k] = pomocni[i];
+        i++;
+        k++;
+    }
+    while(j <= kraj - pocetak){         // stavimo elemente iz drugog sortiranog podniza koji su ostali
+        niz[k] = pomocni[j];
+        j++;
+        k++;
+    }
+    delete[] pomocni;
+}
+
+void MergeSort(int niz[], int pocetak, int kraj){
+    if(pocetak < kraj) {                          // pocetni nesortirani niz se rekurzivno dijeli na podnizove, sve dok podnizovi ne budu imali samo 1 element
+        int kraj_prvog = (pocetak + kraj - 1) / 2;      // index zadnje pozicije prvog podniza
+        int pocetak_drugog = kraj_prvog + 1;            // index prve pozicije drugog podniza
+        MergeSort(niz,pocetak,kraj_prvog);              // rekurzivni proces se nastavlja nad prvom polovinom podijeljenog niza ( prvi podniz )
+        MergeSort(niz,pocetak_drugog,kraj);             // rekurzivni proces se nastavlja nad drugom polovinom podijeljenog niza ( drugi podniz )
+        Merge(niz,pocetak,kraj_prvog,pocetak_drugog,kraj);      // spajamo sortirane podnizove
+    }
+}
+
+int main()
+{
+    const int broj_elemenata(13);
+    int niz[] = {25,20,4,18,16,11,10,5,14,35,28,32,7};
+    MergeSort(niz,0,broj_elemenata-1);
+    for(int i = 0; i < broj_elemenata; i++) {
+        cout << niz[i] << " ";
+    }
+    return 0;
+}

@@ -1,0 +1,109 @@
+Dat je tezinski usmjereni aciklicni graf i neki cvor "s". Potrebno je naci najduzu udaljenost u grafu pocev od tog cvora "s".
+
+#include <iostream>
+#include <list>
+#include <stack>
+#include <vector>
+
+using namespace std;
+
+struct Cvor {
+    int v;
+    int tezina;
+    Cvor(int v, int tezina) {
+        this->v = v;
+        this->tezina = tezina;
+    }
+    int DajV() { return v; }
+    int DajTezinu() { return tezina; }
+};
+
+class Graf {
+    int V;
+    list<Cvor> *lista;
+public:
+    Graf(int V) {
+        this->V = V;
+        lista = new list<Cvor>[V];
+    }
+    void DodajGranu(int u, int v, int tezina) {
+        Cvor pomocni(v,tezina);
+        lista[u].push_back(pomocni);
+    }
+    void TopoloskoSortiranje(int v, vector<bool> &posjecen, stack<int> &stek);
+    int NajduziPut(int s);
+
+};
+
+void Graf::TopoloskoSortiranje(int v, vector<bool> &posjecen, stack<int> &stek) {
+    posjecen[v] = true;
+    list<Cvor>::iterator it;
+    for(it = lista[v].begin(); it != lista[v].end(); it++) {
+        Cvor pomocni = *it;
+        if(posjecen[pomocni.DajV()] == false){
+            TopoloskoSortiranje(pomocni.DajV(),posjecen,stek);
+        }
+    }
+    stek.push(v);
+
+}
+
+int Graf::NajduziPut(int s) {
+    vector<bool> posjecen(V);
+    for(int i = 0; i < V; i++) {
+        posjecen[i] = false;
+    }
+
+    stack<int> stek;
+    for(int i = 0; i < V; i++){
+        if(posjecen[i] == false){
+            TopoloskoSortiranje(i,posjecen,stek);
+        }
+    }
+
+    vector<int> udaljenosti(V);
+    for(int i = 0; i < V; i++){
+        udaljenosti[i] = INT_MIN;
+    }
+    udaljenosti[s] = 0;
+
+    while(!stek.empty()){
+        int temp = stek.top();
+        stek.pop();
+        list<Cvor>::iterator it;
+        if(udaljenosti[temp] != INT_MIN) {
+            for(it = lista[temp].begin(); it != lista[temp].end(); it++){
+                if(udaljenosti[it->DajV()] < udaljenosti[temp] + it->DajTezinu()){
+                    udaljenosti[it->DajV()] = udaljenosti[temp] + it->DajTezinu();
+                }
+            }
+        }
+    }
+
+    int Max = udaljenosti[0];
+    for(int i = 1; i < V; i++){
+        Max = max(Max,udaljenosti[i]);
+    }
+
+    return Max;
+}
+
+int main() {
+
+  Graf g(6);
+    g.DodajGranu(0, 1, 5);
+    g.DodajGranu(0, 2, 3);
+    g.DodajGranu(1, 3, 6);
+    g.DodajGranu(1, 2, 2);
+    g.DodajGranu(2, 4, 4);
+    g.DodajGranu(2, 5, 2);
+    g.DodajGranu(2, 3, 7);
+    g.DodajGranu(3, 5, 1);
+    g.DodajGranu(3, 4, -1);
+    g.DodajGranu(4, 5, -2);
+    cout << g.NajduziPut(1);
+
+  return 0;
+}
+
+vremenska kompleksnost :  O ( V + E )

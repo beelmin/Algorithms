@@ -1,0 +1,30 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+
+int main()
+{
+
+    vector<int> cijene = {1,5,8,9,10,17,17,20};
+    int n = cijene.size();
+    
+    vector<int> tablica(n+1);
+    tablica[0] = 0;
+
+    for(int i = 1; i <= n; i++){
+
+        int max_cijena = INT_MIN;
+
+        for(int j = 0; j < i; j++) {
+            max_cijena = max(max_cijena, cijene[j] + tablica[i-1-j]);
+        }
+
+        tablica[i] = max_cijena;
+    }
+
+    cout << tablica[n] << endl;
+
+    return 0;
+}

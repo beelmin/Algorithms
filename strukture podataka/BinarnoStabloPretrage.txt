@@ -1,0 +1,256 @@
+#include <iostream>
+
+using namespace std;
+
+struct Cvor {
+        int kljuc;
+        Cvor *lijevo;       // pokazivac na lijevo podstablo
+        Cvor *desno;        // pokazivac na desno podstablo
+    };
+
+class BSP {
+    Cvor *korijen;              // pokazivac na korijen stabla
+    void Preorder(Cvor *kor);                   // posto su metode u privatnom dijelu, one se mogu pozvati samo u metodama ove klase, ne i u main-u
+    void Inorder(Cvor *kor);
+    void Postorder(Cvor *kor);
+    void Umetni(Cvor *&kor, const int &x);
+    Cvor* Trazi(Cvor *kor, const int &x);
+    Cvor* IspisiMinBSP(Cvor *kor);
+    Cvor* IspisiMaxBSP(Cvor *kor);
+    bool BrisiCvor(Cvor *&kor, const int &x);
+    void Brisi(Cvor *kor);
+    int Visina(Cvor *kor);
+
+public:
+    BSP() : korijen(nullptr) {}
+    void Umetni(const int &x);
+    void Preorder();
+    void Inorder();
+    void Postorder();
+    void Posjeti(Cvor *p){
+        cout << p->kljuc << endl;
+    }
+    void Trazi(const int &x);
+    void IspisiMinBSP();
+    void IspisiMaxBSP();
+    void BrisiCvor(const int &x);
+    void Brisi();
+    int Visina();
+    ~BSP() { Brisi(korijen); }
+};
+
+void BSP::Umetni(Cvor *&kor, const int &x) {        // iskoristili referencu da poistovjetimo parametre, da ne pravimo novi pomocni cvor
+    if(kor == nullptr) {
+        kor = new Cvor;
+        kor->kljuc = x;
+        kor->lijevo = nullptr;
+        kor->desno = nullptr;
+    }else{
+        if(x < kor->kljuc){
+            Umetni(kor->lijevo,x);
+        }else{
+            Umetni(kor->desno,x);
+        }
+    }
+}
+
+void BSP::Umetni(const int &x) {
+    Umetni(korijen,x);              // unutar tijela ove metode imamo pristup atributu "korijen" jer je ovo metoda
+                                    // iskoristili smo to da proslijedimo privatnoj metodi atribut "korijen"
+}
+
+void BSP::Preorder(Cvor *kor){
+    if(kor != nullptr){
+        Posjeti(kor);
+        Preorder(kor->lijevo);
+        Preorder(kor->desno);
+    }
+}
+
+void BSP::Preorder() {
+    Preorder(korijen);
+}
+
+void BSP::Inorder(Cvor *kor){
+    if(kor != nullptr) {
+        Inorder(kor->lijevo);
+        Posjeti(kor);
+        Inorder(kor->desno);
+    }
+}
+
+void BSP::Inorder() {
+    Inorder(korijen);
+}
+
+void BSP::Postorder(Cvor *kor) {
+    if(kor != nullptr) {
+        Postorder(kor->lijevo);
+        Postorder(kor->desno);
+        Posjeti(kor);
+    }
+}
+
+void BSP::Postorder() {
+    Postorder(korijen);
+}
+
+Cvor* BSP::Trazi(Cvor *kor, const int &x) {
+    if(kor == nullptr || kor->kljuc == x) {
+        return kor;
+    }
+    if(x < kor->kljuc){
+        Trazi(kor->lijevo,x);
+    }else{
+        Trazi(kor->desno,x);
+    }
+}
+
+void BSP::Trazi(const int &x){
+    Cvor *p = Trazi(korijen,x);
+    if(p == nullptr ){
+        cout<< "Element se  ne nalazi u stablu";
+    }else{
+        cout<< "Element se nalazi u stablu";
+    }
+}
+
+Cvor* BSP::IspisiMinBSP(Cvor *kor){
+    if(kor == nullptr) {
+        throw "Stablo je prazno";
+    }
+    while(kor->lijevo != nullptr) {
+        kor = kor->lijevo;
+    }
+    return kor;
+}
+
+void BSP::IspisiMinBSP(){
+    Cvor *p = IspisiMinBSP(korijen);
+    cout << "Minimalni element je : " << p->kljuc << endl;
+}
+
+Cvor* BSP::IspisiMaxBSP(Cvor *kor) {
+    if(kor == nullptr) {
+        throw "Stablo je prazno";
+    }
+    while(kor->desno != nullptr) {
+        kor = kor->desno;
+    }
+    return kor;
+}
+
+void BSP::IspisiMaxBSP() {
+    Cvor *p = IspisiMaxBSP(korijen);
+    cout << "Maximalni element je : " << p->kljuc <<endl;
+}
+
+bool BSP::BrisiCvor(Cvor *&kor, const int &x){
+    Cvor *p(kor), *q(nullptr);
+    Cvor *tmp(nullptr), *pp(nullptr), *rp(nullptr);
+    while( p != nullptr && x != p->kljuc) {
+        q = p;
+        if(x < p->kljuc) {
+            p = p->lijevo;
+        }else{
+            p = p->desno;
+        }
+    }
+    if(p == nullptr) {
+        return false;
+    }
+    if(p->lijevo == nullptr) {
+        rp = p->desno;
+    }else if(p->desno == nullptr) {
+        rp = p->lijevo;
+    }else{
+        pp = p;
+        rp = p->lijevo;
+        tmp = rp->desno;
+        while(tmp != nullptr){
+            pp = rp;
+            rp = tmp;
+            tmp = rp->desno;
+        }
+        if(pp != p){
+            pp->desno = rp->lijevo;
+            rp->lijevo = p->lijevo;
+        }
+        rp->desno = p->desno;
+    }
+    if(q == nullptr) {
+        korijen = rp;
+    }else if(p == q->lijevo){
+        q->lijevo = rp;
+    }else{
+        q->desno = rp;
+    }
+    delete p;
+    return true;
+
+}
+
+void BSP::BrisiCvor(const int &x){
+    bool nadjen = BrisiCvor(korijen,x);
+    if(nadjen == false) {
+        cout << "Cvor se ne nalazi u stablu" << endl;
+    }else{
+        cout << "Cvor je obrisan" << endl;
+    }
+}
+
+void BSP::Brisi(Cvor *kor){
+    if(kor != nullptr){
+        Brisi(kor->lijevo);
+        Brisi(kor->desno);
+        delete kor;
+    }
+}
+
+void BSP::Brisi(){
+    Brisi(korijen);
+    korijen = nullptr;
+}
+
+int BSP::Visina(Cvor *kor) {
+    int hl(0), hr(0);
+    if(kor == nullptr) {
+        return -1;
+    }
+    hl = Visina(kor->lijevo);
+    hr = Visina(kor->desno);
+    if(hl > hr) {
+        return hl + 1;
+    }else{
+        return hr + 1;
+    }
+}
+
+int BSP::Visina(){
+    return Visina(korijen);
+}
+
+int main()
+{
+    BSP proba;
+    proba.Umetni(18);
+    proba.Umetni(12);
+    proba.Umetni(21);
+    proba.Umetni(5);
+    proba.Umetni(15);
+    proba.Umetni(27);
+    proba.Umetni(3);
+    proba.Umetni(11);
+    proba.Umetni(16);
+    proba.Umetni(24);
+    proba.Umetni(30);
+    proba.Umetni(2);
+    proba.Umetni(8);
+    proba.Umetni(22);
+    proba.Umetni(25);
+    proba.Umetni(6);
+    proba.Umetni(10);
+    proba.Brisi();
+    proba.Inorder();
+    return 0;
+}

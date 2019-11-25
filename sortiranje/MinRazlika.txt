@@ -1,0 +1,31 @@
+Dat je nesortiran niz. Potrebno je pronaci najmanju razliku izmedju bilo koja dva para u nizu
+
+primjer :
+
+Input  : 1, 5, 3, 19, 18, 25
+Output : 1
+Najmanja razlika je izmedju 18 i 19
+
+
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+
+int main()
+{
+    int niz[] = {30, 5, 20, 9};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    sort(niz,niz+n);
+    int min_razlika = INT_MAX;
+    for(int i = 0; i < n-1; i++) {
+        if(niz[i+1] - niz[i] < min_razlika) {
+            min_razlika = niz[i+1] - niz[i];
+        }
+    }
+    cout << min_razlika;
+    return 0;
+}
+
+vremenska kompleksnost :  O(nlogn)

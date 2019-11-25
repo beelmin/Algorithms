@@ -1,0 +1,51 @@
+Dat je usmjeren i povezan graf sa "n" cvorova. Ako postoji grana od cvora "u" do cvora "v" kazemo da "u" zavisi od "v".
+Zadatak je izracunati ukupnu sumu zavisnosti za svaki cvor.
+
+
+#include <iostream>
+#include <vector>
+#include <list>
+
+using namespace std;
+
+class Graf {
+    int V;
+    list<int> *lista;
+public:
+    Graf(int V) {
+        this->V = V;
+        lista = new list<int> [V];
+    }
+    void DodajGranu(int u, int v) {
+        lista[u].push_back(v);
+    }
+    int SumaZavisnosti();
+};
+
+int Graf::SumaZavisnosti() {
+    int suma = 0;
+
+    for(int i = 0; i < V; i++) {
+        suma += lista[i].size();
+    }
+
+    return suma;
+
+}
+
+
+int main()
+{
+    Graf g(4);
+    g.DodajGranu(0,2);
+    g.DodajGranu(0,3);
+    g.DodajGranu(1,2);
+    g.DodajGranu(3,2);
+
+    cout << g.SumaZavisnosti();
+
+
+    return 0;
+}
+
+vremenska kompleksnost : O ( V + E )

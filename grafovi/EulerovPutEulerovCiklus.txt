@@ -1,0 +1,134 @@
+Neusmjereni grafovi
+
+Eulerov ciklus :
+- svi cvorovi sa nenultim stepenom moraju bit povezani
+- svi cvorovi imaju paran stepen
+
+Eulerov put :
+- svi cvorovi sa nenultim stepenom moraju bit povezani
+- tacno 2 cvora imaju neparan stepen, ostali imaju paran
+
+#include <iostream>
+#include <list>
+#include <queue>
+#include <vector>
+
+using namespace std;
+
+class Graf {
+    int V;
+    list<int> *lista;
+public:
+    Graf(int V);
+    void DodajGranu(int v, int w);
+    bool EulerovPut();
+    bool EulerovCiklus();
+    void DFS(int cvor, vector<bool> &posjecen);
+    bool Povezan();
+
+};
+
+Graf::Graf(int V){
+    this->V = V;
+    lista = new list<int>[V];
+}
+
+void Graf::DodajGranu(int v, int w) {
+    lista[v].push_back(w);
+    lista[w].push_back(v);
+}
+
+bool Graf::Povezan() {
+    vector<bool> posjecen(V,false);
+    int i;
+    for(i = 0; i < V; i++) {            // nadji cvor sa nenultim stepenom
+        if(lista[i].size() > 0){
+            break;
+        }
+    }
+    DFS(i,posjecen);        // pokreni DFS u njemu
+
+    for(int i = 0; i < V; i++){                                 // provjeri da li su svi cvorovi sa nenultim stepenom povezani
+        if(posjecen[i] == false && lista[i].size() > 0) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void Graf::DFS(int cvor, vector<bool> &posjecen) {
+    posjecen[cvor] = true;
+    for(auto it = lista[cvor].begin(); it != lista[cvor].end(); it++){
+        if(!posjecen[*it]){
+            DFS(*it,posjecen);
+        }
+    }
+}
+
+bool Graf::EulerovPut() {
+
+    if(Povezan() == false) {        // provjeri da li su svi cvorovi sa nenultim stepenom povezani
+        return false;
+    }
+
+    int broj_neparnih = 0;
+    for(int i = 0; i < V; i++) {
+        if(lista[i].size() % 2 == 1){
+            broj_neparnih++;
+        }
+    }
+    if(broj_neparnih == 2) {            // moraju bit 2 cvora sa neparnim stepenom, a svi ostali cvorovi da imaju paran stepen
+        return true;
+    }else{
+        return false;
+    }
+
+}
+
+bool Graf::EulerovCiklus() {
+
+    if(Povezan() == false) {        // provjeri da li su svi cvorovi sa nenultim stepenom povezani
+        return false;
+    }
+
+    int broj_neparnih = 0;
+    for(int i = 0; i < V; i++) {
+        if(lista[i].size() % 2 == 1){
+            broj_neparnih++;
+        }
+    }
+    if(broj_neparnih == 0) {            // svi cvorovi moraju imat paran stepen
+        return true;
+    }else{
+        return false;
+    }
+
+}
+
+
+
+
+int main() {
+
+  Graf g(5);
+  g.DodajGranu(1, 0);
+  g.DodajGranu(0, 2);
+  g.DodajGranu(2, 1);
+  g.DodajGranu(0, 3);
+  g.DodajGranu(3, 4);
+  cout << g.EulerovPut() << endl;
+
+  Graf g1(5);
+  g1.DodajGranu(1, 0);
+  g1.DodajGranu(0, 2);
+  g1.DodajGranu(2, 1);
+  g1.DodajGranu(0, 3);
+  g1.DodajGranu(3, 4);
+  g1.DodajGranu(4, 0);
+  cout << g1.EulerovCiklus() << endl;
+
+  return 0;
+}
+
+vremenska kompleksnost :  O( V + E )

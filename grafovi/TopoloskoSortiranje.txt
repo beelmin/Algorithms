@@ -1,0 +1,80 @@
+#include <iostream>
+#include <list>
+#include <queue>
+#include <vector>
+
+using namespace std;
+
+class Graf {
+    int V;
+    list<int> *lista;
+public:
+    Graf(int V);
+    void DodajGranu(int v, int w);
+    void TopoloskoSortiranje();
+};
+
+Graf::Graf(int V){
+    this->V = V;
+    lista = new list<int>[V];
+}
+
+void Graf::DodajGranu(int v, int w) {
+    lista[v].push_back(w);
+}
+
+void Graf::TopoloskoSortiranje() {
+    vector<int> ulazni_stepeni(V,0);
+    list<int>::iterator it;
+    for(int i = 0; i < V; i++) {
+        for(it = lista[i].begin(); it != lista[i].end(); it++){         // za svaki cvor odredimo njegov ulazni stepen
+            ulazni_stepeni[*it]++;
+        }
+    }
+    queue<int> q;
+    for(int i = 0; i < V; i++) {
+        if(ulazni_stepeni[i] == 0) {        // u red stavimo cvorove sa ulaznim stepenom 0
+            q.push(i);
+        }
+    }
+    vector<int> ispis;
+    int brojac = 0;
+    while(!q.empty()) {
+        int a = q.front();
+        q.pop();
+        ispis.push_back(a);
+        for(it = lista[a].begin(); it != lista[a].end(); it++) {        // smanjimo ulazni stepen svakom cvoru koji je susjed trenutnom cvoru u redu
+            ulazni_stepeni[*it]--;                                      // ako je nakon smanjivanja, ulazni stepen 0, stavimo ga u red
+            if(ulazni_stepeni[*it] == 0) {
+                q.push(*it);
+            }
+        }
+        brojac++;
+    }
+    if(brojac != V) {
+        cout << "U grafu postoji ciklus pa nema topoloskog sortiranja" << endl;
+        return;
+    }
+
+    for(int i = 0; i < ispis.size(); i++) {
+        cout << ispis[i] << " ";
+    }
+
+}
+
+
+
+int main() {
+
+  Graf g(6);
+  g.DodajGranu(5,2);
+  g.DodajGranu(5,0);
+  g.DodajGranu(4,1);
+  g.DodajGranu(2,3);
+  g.DodajGranu(3,1);
+  g.TopoloskoSortiranje();
+
+  return 0;
+}
+
+vremenska kompleksnost :  O( V + E )

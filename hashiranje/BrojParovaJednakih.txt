@@ -1,0 +1,31 @@
+Dat je niz od "n" elemenata. Zadatak je izbrojati ukupan broj parova indeksa (i,j) za koje je niz[i] == niz[j]  i   i != j
+
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+
+using namespace std;
+
+
+int main() {
+
+    vector<int> v = {1,2,3,1,5,1};
+    int n = v.size();
+
+    unordered_map<int,int> mapa;
+
+    for(int i = 0; i < n; i++) {
+        mapa[v[i]]++;
+    }
+
+    int rezultat = 0;
+    for(auto it = mapa.begin(); it != mapa.end(); it++){
+        int brojac = it->second;
+        rezultat += (brojac*(brojac-1))/2;
+    }
+
+    cout << rezultat;
+
+
+    return 0;
+}

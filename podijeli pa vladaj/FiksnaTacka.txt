@@ -1,0 +1,40 @@
+Dat je niz u rastucem poretku. Moze sadrzavati i negativne brojeve. Pronaci fiksnu tacku ako postoji.
+Fiksna tacka je element koji je iste vrijednosti kao i njegov index u nizu.
+
+primjer
+
+int niz[] = {-10, -5, 0, 3, 7}
+
+3 je fiksna tacka jer se nalazi na indexu 3
+
+ideja: posto je niz sortiran, prepravit cemo binarnu pretragu
+
+#include <iostream>
+
+using namespace std;
+
+int FiksnaTacka(int niz[], int pocetak, int kraj){
+    if(pocetak <= kraj) {
+        int sredina = (pocetak + kraj) / 2;
+        if(sredina == niz[sredina]){
+            return sredina;
+        }
+        if(sredina > niz[sredina]) {
+            return FiksnaTacka(niz,sredina+1,kraj);
+        }else{
+            return FiksnaTacka(niz,pocetak,sredina-1);
+        }
+    }
+    return -1;
+}
+
+int main()
+{
+    int niz[] = {-10, -5, 0, 3, 7};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    cout << FiksnaTacka(niz,0,n);
+
+    return 0;
+}
+
+vremenska kompleksnost : O(log(n))

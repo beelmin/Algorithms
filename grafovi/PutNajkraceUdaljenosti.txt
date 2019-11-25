@@ -1,0 +1,88 @@
+Neusmjereni graf
+Netezinski graf
+Ispisuje najkraci put od A do B
+
+#include <iostream>
+#include <list>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+class Graf {
+    int V;
+    list<int> *lista;
+    bool BFS(int izvor, int odrediste, vector<bool> &posjecen, vector<int> &put);
+public:
+    Graf(int V) {
+        this->V = V;
+        lista = new list<int> [V];
+    }
+    void DodajGranu(int u, int v) {
+        lista[u].push_back(v);
+        lista[v].push_back(u);
+    }
+    void PutNajkraceUdaljenosti(int izvor, int odrediste);
+    void IspisiPut(vector<int> &put, int cvor);
+
+};
+
+void Graf::IspisiPut(vector<int> &put, int cvor) {
+    if(put[cvor] == -1) {
+        cout << cvor << " ";
+        return;
+    }
+    IspisiPut(put,put[cvor]);
+    cout << cvor << " ";
+}
+
+bool Graf::BFS(int izvor, int odrediste, vector<bool> &posjecen, vector<int> &put) {
+    queue<int> Q;
+    Q.push(izvor);
+    posjecen[izvor] = true;
+    while(!Q.empty()) {
+        int trenutni = Q.front();
+        Q.pop();
+        list<int>::iterator it;
+        for(it = lista[trenutni].begin(); it != lista[trenutni].end(); it++) {
+            if(!posjecen[*it]) {
+                posjecen[*it] = true;
+                put[*it] = trenutni;
+                if(*it == odrediste) {
+                    return true;
+                }
+                Q.push(*it);
+            }
+        }
+    }
+    return false;
+}
+
+void Graf::PutNajkraceUdaljenosti(int izvor, int odrediste) {
+    vector<bool> posjecen(V,false);
+    vector<int> put(V);
+    put[izvor] = -1;
+    if(!BFS(izvor,odrediste,posjecen,put)){
+        cout << "Izvor i odrediste nisu povezani";
+        return;
+    }
+    IspisiPut(put,odrediste);
+}
+
+
+
+int main(){
+
+    Graf g(5);
+    g.DodajGranu(0, 1);
+    g.DodajGranu(0, 2);
+    g.DodajGranu(1, 3);
+    g.DodajGranu(1, 4);
+    g.DodajGranu(4, 3);
+
+    g.PutNajkraceUdaljenosti(2,3);
+
+    return 0;
+}
+
+vremenska kompleksnost:  O( V + E )

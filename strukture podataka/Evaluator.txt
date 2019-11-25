@@ -1,0 +1,148 @@
+#include <iostream>
+
+using namespace std;
+
+class Stek {
+    struct Cvor {
+        int element;
+        Cvor *sljedeci;
+    };
+    Cvor *vrh;          // pokazivac na vrh steka
+    int velicina;       // trenutna velicina steka
+public:
+    Stek() : vrh(nullptr), velicina(0) {}
+    void StaviNaStek(const int &x);
+    void SkiniSaSteka();
+    int &ElementNaVrhu() const;
+    void Brisi();
+    bool JeLiPrazan() const { return vrh == nullptr; }
+    int Duzina() const { return velicina; }
+    void IspisSteka() const;
+    ~Stek() { Brisi(); }
+};
+
+void Stek::StaviNaStek(const int &x) {
+    Cvor *novi = new Cvor;
+    novi->element = x;
+    if(velicina == 0){                  // slucaj kada je stek prazan
+        novi->sljedeci = nullptr;
+        vrh = novi;
+    }else{
+        novi->sljedeci = vrh;
+        vrh = novi;
+    }
+    velicina++;
+}
+
+void Stek::SkiniSaSteka() {
+    if(vrh == nullptr) {
+        throw "Stek je prazan";
+    }
+    Cvor *pomocni;
+    pomocni = vrh;
+    vrh = pomocni->sljedeci;
+    delete pomocni;
+    velicina--;
+}
+
+int &Stek::ElementNaVrhu() const {
+    if(vrh == nullptr){
+        throw "Stek je prazan";
+    }
+    return vrh->element;
+}
+
+void Stek::IspisSteka() const {
+    for(Cvor *p = vrh; p != nullptr; p = p->sljedeci){
+        cout << p->element << endl;
+    }
+}
+
+void Stek::Brisi() {
+    while( JeLiPrazan() == false ){
+        SkiniSaSteka();
+    }
+}
+
+class IntPostFix {                              // evaluacija postfiksnih izraza
+    string izraz;       // postfiksni izraz
+    Stek S;             // stek za smjestanje operanada
+    int rezultat;
+public:
+    void Ucitaj();      // ucitavanje postfiksnog izraza
+    void Evaluacija();
+    bool JeLiOperator(char znak);
+    void PrimjeniOperator(char Operator, int operand1, int operand2);
+    int IspisiRezultat() { return rezultat; }
+    int IzdvojiBroj(int &p);                    // izdvajamo broj iz stringa "izraz"
+
+};
+
+void IntPostFix::Ucitaj() {
+    S.Brisi();                                  // stek mora biti prazan
+    cout << "Unesi postfiksni izraz " << endl;
+    getline(cin,izraz);
+}
+bool IntPostFix::JeLiOperator(char znak) {
+    if(znak == '+' || znak == '-' || znak == '*' || znak == '/'){
+        return true;
+    }
+    return false;
+}
+
+void IntPostFix::PrimjeniOperator(char Operator, int operand1, int operand2) {
+    if(Operator == '+'){
+        S.StaviNaStek(operand2 + operand1);
+    }else if(Operator == '-'){
+        S.StaviNaStek(operand2 - operand1);
+    }else if(Operator == '*'){
+        S.StaviNaStek(operand2 * operand1);
+    }else{
+        S.StaviNaStek(operand2 / operand1);
+    }
+}
+void IntPostFix::Evaluacija() {
+    int op1, op2;
+    string pomocni;
+    int i = 0;
+    while( i != izraz.size() ){
+            if(JeLiOperator(izraz[i]) == true){
+                    op1 = S.ElementNaVrhu();
+                    S.SkiniSaSteka();
+                    op2 = S.ElementNaVrhu();
+                    S.SkiniSaSteka();
+                    PrimjeniOperator(izraz[i],op1,op2);
+
+            }else if(izraz[i] != ' '){              // pretpostavljamo da ce korisnik unijeti samo validne operatore, brojeve i razmake, nista drugo !!!
+                S.StaviNaStek(IzdvojiBroj(i));
+            }
+
+            i++;
+    }
+    rezultat = S.ElementNaVrhu();
+    S.SkiniSaSteka();
+    if(S.JeLiPrazan() == false){
+        throw "Previse operanada";
+    }
+}
+
+int IntPostFix::IzdvojiBroj(int &p){     // referenca je izuzetno bitna jer poistovjecujemo "i" i "p"
+    int broj = izraz[p] - '0';
+    p++;
+    while(izraz[p] >= '0' && izraz[p] <= '9'){
+        broj = 10*broj + ( izraz[p] - '0' );
+        p++;
+    }
+    p--;   // vratimo se na zadnju cifru prije razmaka
+    return broj;
+}
+int main()
+{
+    IntPostFix proba;
+    proba.Ucitaj();
+    proba.Evaluacija();
+    cout << proba.IspisiRezultat();
+
+
+    return 0;
+}

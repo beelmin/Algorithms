@@ -1,0 +1,31 @@
+Naci najveci i drugi najveci element u nizu u manje od 2n poredjenja pri cemu je n broj elemenata niza
+
+#include <iostream>
+
+using namespace std;
+
+int main() {
+
+  int niz[] = {3,1,5,6,2,4,10};
+  int n = sizeof(niz) / sizeof(niz[0]);
+  int najveci, drugi_najveci;
+  if(niz[1] > niz[0]){
+    najveci = niz[1];
+    drugi_najveci = niz[0];
+  }else{
+    najveci = niz[0];
+    drugi_najveci = niz[1];
+  }
+  for(int i = 2; i < n; i++) {
+    if(niz[i] > najveci) {
+        drugi_najveci = najveci;
+        najveci = niz[i];
+    }else if(niz[i] > drugi_najveci) {
+        drugi_najveci = niz[i];
+    }
+  }
+  cout << najveci<< " " << drugi_najveci << endl;
+  return 0;
+}
+
+broj poredjenja : 2(n - 2) + 1 = 2n - 4 + 1 = 2n - 3 < 2n

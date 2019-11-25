@@ -1,0 +1,55 @@
+Dat je niz brojeva. Odrediti koliko se puta odredjeni broj pojavljuje u nizu.
+
+#include <iostream>
+
+using namespace std;
+
+int PrvoPojavljivanje(int niz[], int pocetak, int kraj, int x) {
+    if(pocetak <= kraj) {
+        int sredina = (pocetak + kraj) / 2;
+        if(niz[sredina] == x && (niz[sredina-1] != x || sredina == pocetak)) {
+            return sredina;
+        }
+        if(niz[sredina] < x) {
+            return PrvoPojavljivanje(niz,sredina+1,kraj,x);
+        }else {
+            return PrvoPojavljivanje(niz,pocetak,sredina-1,x);
+        }
+    }
+    return -1;
+}
+
+int ZadnjePojavljivanje(int niz[], int pocetak, int kraj, int x) {
+    if(pocetak <= kraj) {
+        int sredina = (pocetak + kraj) / 2;
+        if(niz[sredina] == x && (niz[sredina+1] != x || sredina == kraj)) {
+            return sredina;
+        }
+        if(niz[sredina] <= x) {
+            return ZadnjePojavljivanje(niz,sredina+1,kraj,x);
+        }else {
+            return ZadnjePojavljivanje(niz,pocetak,sredina-1,x);
+        }
+    }
+
+    return -1;
+}
+
+
+
+int main() {
+
+    int niz[] = {1,2,3,3,3,4,5,6,6};
+    int n = sizeof(niz) / sizeof(niz[0]);
+
+    int x = 3;
+    if(PrvoPojavljivanje(niz,0,n-1,x) != -1) {
+        cout << ZadnjePojavljivanje(niz,0,n-1,x) - PrvoPojavljivanje(niz,0,n-1,x) + 1 << endl;
+    }else {
+        cout << "Broj se ne nalazi u nizu" << endl;
+    }
+
+    return 0;
+}
+
+vremenska kompleksnost :  O( logn )

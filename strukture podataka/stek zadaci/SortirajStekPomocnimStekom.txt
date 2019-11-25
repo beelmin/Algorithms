@@ -1,0 +1,57 @@
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+void Ispisi(stack<int> S) {
+
+    while(!S.empty()) {
+
+        cout << S.top() << " ";
+        S.pop();
+    }
+
+    cout << endl;
+}
+
+stack<int> Sortiraj(stack<int> &S) {
+
+    stack<int> rezultat;
+
+    while(!S.empty()) {
+
+        int temp = S.top();
+        S.pop();
+
+        while(!rezultat.empty() && rezultat.top() > temp) {
+
+            S.push(rezultat.top());
+            rezultat.pop();
+
+        }
+
+        rezultat.push(temp);
+
+    }
+
+    return rezultat;
+}
+
+
+
+int main()
+{
+    stack<int> S;
+    S.push(5);
+    S.push(2);
+    S.push(4);
+    S.push(1);
+    S.push(9);
+
+    Ispisi(S);
+
+    stack<int> temp = Sortiraj(S);
+    Ispisi(temp);
+
+   return 0;
+}

@@ -1,0 +1,43 @@
+Naci element koji fali  u aritmetickom nizu. Fali tacno jedan element !
+
+
+#include <iostream>
+
+using namespace std;
+
+int Trazi(int niz[], int pocetak, int kraj, int d){
+    if(pocetak < kraj) {                        // moraju bit barem 2 elementa u nizu
+        int sredina = (pocetak + kraj) / 2;
+        if(niz[sredina+1] - niz[sredina] != d) {        // gledamo da li fali izmedju sredina i sredina+1
+            return niz[sredina] + d;
+        }
+        if(sredina > 0 && niz[sredina] - niz[sredina-1] != d) {   // gledamo da li fali izmedju sredina-1 i sredina
+            return niz[sredina-1] + d;
+        }
+        if(niz[sredina] == niz[0] + sredina * d) {       //   formula za opci clan aritm. niza je a(n) = a(0) + (n-1) * d 
+            return Trazi(niz,sredina+1,kraj,d);          // zbog indexiranja od 0 mi koristimo n * d umjesto (n-1) * d
+        }else{
+            return Trazi(niz,pocetak,sredina-1,d);
+        }
+    }
+    return -1;
+}
+
+int fali(int niz[], int n){
+    int d = (niz[n-1] - niz[0]) / n;
+    int x = Trazi(niz,0,n-1,d);
+    return x;
+}
+
+
+
+int main()
+{
+    int niz[] = {2,4,6,8,12,14,16};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    cout << fali(niz,n);
+    return 0;
+}
+
+
+vremenska kompleksost : O(log(n))

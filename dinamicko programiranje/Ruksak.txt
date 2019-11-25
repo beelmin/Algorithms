@@ -1,0 +1,41 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+
+int main()
+{
+
+    vector<int> cijene = {60,100,120};
+    vector<int> kapacitet = {5,10,15};
+    int kapacitet_ruksaka = 20;
+
+    int n = cijene.size();
+
+    vector<vector<int> > dp(n+1, vector<int> (kapacitet_ruksaka+1));
+
+    for(int i = 0; i <= n; i++) {
+        for(int j = 0; j <= kapacitet_ruksaka; j++) {
+            // j = 0 znaci da je kapacitet ruksaka = 0
+            // i = 0 znaci da nema predmeta
+            if(i == 0 || j == 0) {
+                dp[i][j] = 0;
+
+            }else if(kapacitet[i-1] <= j) {
+
+                dp[i][j] = max(cijene[i-1] + dp[i-1][j-kapacitet[i-1]], dp[i-1][j]);
+
+            // ako je kapacitet trenutnog predmeta veci od kapaciteta ruksaka, ne ukljucujemo taj predmet
+            }else{
+
+                dp[i][j] = dp[i-1][j];
+
+            }
+        }
+    }
+
+    cout << dp[n][kapacitet_ruksaka] << endl;
+
+    return 0;
+}

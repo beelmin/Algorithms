@@ -1,0 +1,91 @@
+Neusmjereni graf
+Printa najkracu udaljenost svih cvorova od nekog cvora "s" - source
+
+#include <iostream>
+#include <list>
+#include <queue>
+#include <vector>
+
+using namespace std;
+
+typedef pair<int,int> par;
+
+class Graf {
+    int V;
+    list< par > *lista;
+public:
+    Graf(int V) {
+        this->V = V;
+        lista = new list< par >[V];
+    }
+    void DodajGranu(int u, int v, int w);
+    void NajkraciPut(int s);
+
+};
+
+void Graf::DodajGranu(int u, int v, int w) {
+    lista[u].push_back(make_pair(v,w));             // parovi su (cvor,tezina)
+    lista[v].push_back(make_pair(u,w));
+
+}
+
+void Graf::NajkraciPut(int s) {
+
+    priority_queue< par,vector< par >,greater< par > > Q;
+    vector<int> udaljenosti(V,INT_MAX);
+
+    Q.push(make_pair(0,s));             // parovi su (udaljenost,cvor)
+    udaljenosti[s] = 0;
+
+    while(!Q.empty()) {
+
+        int cvor = Q.top().second;
+        Q.pop();
+
+        list< par >::iterator it;
+        for(it = lista[cvor].begin(); it != lista[cvor].end(); it++) {
+
+            int komsija = (*it).first;
+            int tezina = (*it).second;
+
+            if(udaljenosti[komsija] > udaljenosti[cvor] + tezina) {
+                udaljenosti[komsija] = udaljenosti[cvor] + tezina;
+                Q.push(make_pair(udaljenosti[komsija],komsija));
+            }
+
+        }
+    }
+
+    for(int i = 0; i < V; i++) {
+        cout << "Cvor " << i << ": " << udaljenosti[i] << endl;
+    }
+
+}
+
+
+
+int main(){
+
+    Graf g(9);
+
+    g.DodajGranu(0, 1, 4);
+    g.DodajGranu(0, 7, 8);
+    g.DodajGranu(1, 2, 8);
+    g.DodajGranu(1, 7, 11);
+    g.DodajGranu(2, 3, 7);
+    g.DodajGranu(2, 8, 2);
+    g.DodajGranu(2, 5, 4);
+    g.DodajGranu(3, 4, 9);
+    g.DodajGranu(3, 5, 14);
+    g.DodajGranu(4, 5, 10);
+    g.DodajGranu(5, 6, 2);
+    g.DodajGranu(6, 7, 1);
+    g.DodajGranu(6, 8, 6);
+    g.DodajGranu(7, 8, 7);
+
+    g.NajkraciPut(0);
+
+    return 0;
+}
+
+vremenska slozenost:  O( E * logV )

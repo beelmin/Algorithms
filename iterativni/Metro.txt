@@ -1,0 +1,47 @@
+/*
+Naziv : Metro
+Tagovi : graphs
+Tezina : 1000
+Vremenska kompleksnost :  O( n )
+*/
+
+
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+
+int main()
+{
+    int n, s;
+    cin >> n >> s;
+    vector<int> rastuci(n+1);
+    vector<int> opadajuci(n+1);
+    for(int i = 1; i <= n; i++){
+        cin >> rastuci[i];
+    }
+    for(int i = 1; i<= n; i++) {
+        cin >> opadajuci[i];
+    }
+
+    if(rastuci[1] == 0) {
+        cout << "NO";
+    }else if(rastuci[s] == 1) {
+        cout << "YES";
+    }else if(opadajuci[s] == 0) {
+        cout << "NO";
+    }else {
+        string odg = "NO";
+        for(int i = s+1; i <= n; i++) {
+            if(rastuci[i] == 1 && opadajuci[i] == 1) {
+                odg = "YES";
+                break;
+            }
+        }
+        cout << odg;
+    }
+
+    return 0;
+}

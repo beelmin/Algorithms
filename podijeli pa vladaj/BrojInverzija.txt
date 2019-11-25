@@ -1,0 +1,64 @@
+#include <iostream>
+
+using namespace std;
+
+int mergesort(int niz[], int pocetak, int sredina, int kraj){
+    int broj_inverzija = 0;
+    int n1 = sredina - pocetak + 1;         // lijevi podniz ima elemenata : sredina - pocetak + 1   jer je  [pocetak ... sredina]
+    int n2 = kraj - sredina;                // desni podniz ima elemenata : kraj - (sredina + 1) + 1 = kraj - sredina   jer je [sredina+1 ... kraj]
+    int *nizL = new int[n1];            // pomocni niz za lijevi podniz
+    int *nizD = new int[n2];            // pomocni niz za desni podniz
+    for(int i = 0; i < n1; i++) {
+        nizL[i] = niz[pocetak + i];           // lijevi podniz ide od [pocetak....sredina]
+    }
+    for(int j = 0; j < n2; j++) {
+        nizD[j] = niz[sredina + 1 + j];     // desni podniz ide od [sredina+1 ... kraj]
+    }
+    int i = 0;          // pocetni index lijevog podniza
+    int j = 0;          // pocetni index desnog podniza
+    int k = pocetak;    // pocetni index sortiranog niza
+    while(i < n1 && j < n2){                            // u ovoj while petlji spajamo sortirani lijevi i desni podniz u originalni niz
+        if(nizL[i] <= nizD[j]){
+            niz[k] = nizL[i];
+            i++;
+        }else{
+            niz[k] = nizD[j];
+            j++;
+            broj_inverzija += n1 - i;   // jer je (n1-1) - (i) + 1 = n1 - i  tj. gornja granica - donja granica + 1
+        }
+        k++;
+    }
+    while(i < n1){                  // ako je ostao neki element u lijevom podnizu kopiramo ga u originalni niz
+        niz[k] = nizL[i];
+        i++;
+        k++;
+    }
+    while(j < n2) {                 // ako je ostao neki element u desnom podnizu kopiramo ga u originalni niz
+        niz[k] = nizD[j];
+        j++;
+        k++;
+    }
+    delete[] nizL;          // oslobodimo memoriju koju smo dinamicki alocirali na pocetku
+    delete[] nizD;
+    return broj_inverzija;
+}
+
+int MergeSort(int niz[], int pocetak, int kraj){
+    int broj_inverzija = 0;
+    if(pocetak < kraj){                                     // dijelimo dok podniz ne bude imao samo 1 element
+        int sredina = (pocetak + kraj) / 2;
+        broj_inverzija = MergeSort(niz,pocetak,sredina);
+        broj_inverzija += MergeSort(niz,sredina+1,kraj);
+        broj_inverzija += mergesort(niz,pocetak,sredina,kraj);
+    }
+    return broj_inverzija;
+}
+
+int main() {
+
+  int niz[] = {8,4,2,1};
+  int n = sizeof(niz) / sizeof(niz[0]);
+  cout << MergeSort(niz,0,n-1);
+
+  return 0;
+}

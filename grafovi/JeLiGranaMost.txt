@@ -1,0 +1,81 @@
+Za datu granu provjeriti da li je ona most tj. da li ukidanjem te grane, graf postane nepovezan.
+
+#include <iostream>
+#include <vector>
+#include <list>
+
+using namespace std;
+
+class Graf {
+    int V;
+    list<int> *lista;
+    void DFS(int cvor, vector<bool> &posjecen);
+public:
+    Graf(int V) {
+        this->V = V;
+        lista = new list<int> [V];
+    }
+    void DodajGranu(int u, int v) {
+        lista[u].push_back(v);
+        lista[v].push_back(u);
+    }
+    bool Povezan();
+    bool JeLiMost(int u, int v);
+
+};
+
+void Graf::DFS(int cvor, vector<bool> &posjecen) {
+    posjecen[cvor] = true;
+    list<int>::iterator it;
+    for(it = lista[cvor].begin(); it != lista[cvor].end(); it++) {
+        if(!posjecen[*it]){
+            DFS(*it,posjecen);
+        }
+    }
+}
+
+bool Graf::Povezan() {
+    vector<bool> posjecen(V,false);
+    DFS(0,posjecen);				// pokrenemo DFS od prvog cvora
+
+    for(int i = 0; i < V; i++) {
+        if(posjecen[i] == false) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool Graf::JeLiMost(int u, int v) {
+    lista[u].remove(v);
+    lista[v].remove(u);
+
+    bool povezan = Povezan();
+
+    DodajGranu(u,v);
+
+    if(!povezan) {
+        return true;
+    }
+    return false;
+}
+
+
+int main()
+{
+    Graf g(5);
+    g.DodajGranu(0,1);
+    g.DodajGranu(0,2);
+    g.DodajGranu(0,3);
+    g.DodajGranu(1,2);
+    g.DodajGranu(3,4);
+
+    cout << g.JeLiMost(0,3);
+
+
+
+    return 0;
+}
+
+vremenska kompleksnost :  O( V + E )

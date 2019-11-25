@@ -1,0 +1,167 @@
+#include <iostream>
+
+using namespace std;
+
+class Lista {
+    struct Cvor {
+        int element;            // element cvora
+        Cvor *sljedeci;         // pokazivac na sljedeci cvor
+        Cvor *prethodni;        // pokazivac na prethodni cvor
+    };
+    int lduzina;            // duzina lijeve particije
+    int dduzina;            // duzina desne particije
+    Cvor *pocetak;          // pokazivac na pocetni cvor
+    Cvor *kraj;             // pokazivac na zadnji cvor
+    Cvor *trenutni;         // pokazivac na prethodnika trenutnog cvora
+public:
+    Lista() : lduzina(0), dduzina(0), pocetak(nullptr), kraj(nullptr), trenutni(nullptr) {}
+    int LDuzina() const { return lduzina; }
+    int DDuzina() const { return dduzina; }
+    void IdiNaPoziciju(int i);
+    int &DajTrenutniElement() const;
+    void DodajNaKraj(const int &x);
+    void Umetni(const int &x);          // umetanje elementa na pocetak desne particijie
+    void Izbaci();              // izbacuje prvi element iz desne particije
+    bool Trazi(const int &x);
+    void IspisiListu() const;
+    bool JeLiPrazna() const { return lduzina + dduzina == 0; }
+    int Duzina() const { return lduzina + dduzina; }
+    void ObrisiListu();
+    ~Lista();
+};
+
+void Lista::DodajNaKraj(const int &x) {
+   Cvor *novi = new Cvor;
+   novi->prethodni = nullptr;
+   novi->element = x;
+   novi->sljedeci = nullptr;
+   if(lduzina + dduzina == 0) {
+        pocetak = novi;                 //  slucaj kada je lista prazna
+        kraj = novi;
+   }else{
+        kraj->sljedeci = novi;
+        novi->prethodni = kraj;         // slucaj kada lista nije prazna
+        kraj = novi;
+   }
+   dduzina++;           // moramo povecat jer se element dodaje u desnu particiju
+}
+
+void Lista::Umetni(const int &x) {
+    Cvor *novi = new Cvor;
+    novi->prethodni = nullptr;
+    novi->element = x;
+    novi->sljedeci = nullptr;
+    if(lduzina == 0){               // slucaj kada se element stavlja na pocetak liste
+        novi->sljedeci = pocetak;
+        pocetak->prethodni = novi;
+        pocetak = novi;
+    }else if(dduzina == 0){         // slucaj kada se element stavlja na kraj liste
+        kraj->sljedeci = novi;
+        novi->prethodni = kraj;
+        kraj = novi;
+    }else{                              // slucaj kada se element stavlja na celo desne particije koja ima barem 1 element
+        novi->sljedeci = trenutni->sljedeci;
+        trenutni->sljedeci->prethodni = novi;
+        trenutni->sljedeci = novi;
+        novi->prethodni = trenutni;
+    }
+    dduzina++;
+}
+
+void Lista::Izbaci(){
+    if(dduzina ==0 ){
+        throw "Nema nista za izbaciti";
+    }
+    Cvor *pomocni;
+    if(lduzina == 0){                   // specijalan slucaj kada izbacujemo prvi element liste
+        pomocni = pocetak;
+        pocetak = pomocni->sljedeci;
+        pocetak->prethodni = nullptr;
+    }else if(dduzina == 1){             // specijalan slucaj kada izbacujemo zadnji element liste
+        trenutni->sljedeci = nullptr;
+        kraj = trenutni;
+    }else{                              // slucaj kada izbacujemo prvi element iz desne particije koje ima barem 2 elementa
+        pomocni = trenutni->sljedeci;
+        trenutni->sljedeci = pomocni->sljedeci;
+        pomocni->sljedeci->prethodni = trenutni;
+    }
+    delete pomocni;
+    dduzina--;
+
+}
+
+int &Lista::DajTrenutniElement() const {
+    if(dduzina == 0){
+        throw "Nema nista za vratiti";
+    }
+    if(trenutni == nullptr){
+        return pocetak->element;
+    }else{
+        return trenutni->sljedeci->element;
+    }
+}
+
+void Lista::IdiNaPoziciju(int i) {
+    if(i < 0 || i > dduzina + lduzina) {
+        throw "Index izvan dozvoljenog raspona";
+    }
+    dduzina = dduzina + lduzina - i;
+    lduzina = i;
+    if(i == 0){                  // specijalan slucaj
+        trenutni = nullptr;
+    }else{
+        trenutni = pocetak;
+        for(int j = 0; j < i - 1; j++){
+            trenutni = trenutni->sljedeci;          // pokazivac trenutni pozicioniramo na zadnji cvor u lijevoj pariticiji
+        }
+    }
+
+}
+
+bool Lista::Trazi(const int &x) {
+    if(lduzina + dduzina == 0){
+        throw "Lista je prazna";
+    }
+    Cvor *p(pocetak);
+    bool nadjen(false);
+    while( p!= nullptr && p->element != x){
+        p = p->sljedeci;
+    }
+    if(p != nullptr){
+        nadjen = true;
+    }
+    return nadjen;
+}
+
+void Lista::IspisiListu() const {
+    for(Cvor *p = pocetak; p != nullptr; p = p->sljedeci) {
+        cout << p->element << endl;
+    }
+}
+
+void Lista::ObrisiListu() {
+    while(pocetak != nullptr){     //  idemo od prvog do zadnjeg cvora i brisemo redom
+        trenutni = pocetak;         // iskoristili "trenutni" umjesto da pravimo novi Cvor *pomocni koji bio obavljao istu f-ju kao i "trenutni"
+        pocetak = pocetak->sljedeci;
+        delete trenutni;
+    }
+    pocetak = kraj = trenutni = nullptr;
+    lduzina = dduzina = 0;
+}
+
+Lista::~Lista(){
+    ObrisiListu();
+}
+
+int main()
+{
+    Lista lista;
+    lista.DodajNaKraj(5);
+    lista.DodajNaKraj(8);
+    lista.DodajNaKraj(12);
+    lista.DodajNaKraj(9);
+    lista.IspisiListu();
+
+
+    return 0;
+}

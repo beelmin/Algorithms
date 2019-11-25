@@ -1,0 +1,30 @@
+Dat je niz ciji su elementi 'D' i 'L' pri cemu D predstavlja auto koje ide desno, a L auto koje ide lijevo. Izbrojati ukupan broj auta koja su se mimoisla.
+
+#include <iostream>
+
+using namespace std;
+
+int BrojParova(char niz[], int n) {
+    int brojL = 0;
+    int rez = 0;
+    for(int i = n-1; i >= 0; i--) {
+        if(niz[i] == 'L') {
+            brojL++;
+        }else{
+            rez += brojL;
+        }
+    }
+    return rez;
+}
+
+int main(){
+
+    char niz[] = {'D','L','D','L','L'};	// parovi su po indexima (0,1), (0,3), (0,4), (2,3), (2,4)  tj. za svako D koliko ima L-ova poslije njeg
+    int n = sizeof(niz) / sizeof(niz[0]);
+
+    cout << BrojParova(niz,n);
+
+    return 0;
+}
+
+vremenska kompleksnost : O ( n )

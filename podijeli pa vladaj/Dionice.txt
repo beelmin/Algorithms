@@ -1,0 +1,44 @@
+Neka je dat niz brojeva koji predstavlja vrijednost dionice za svaki dan. Potreban je algoritam koji ce vratiti najvecu zaradu.
+primjer: 
+   4, 10, 5, 2, 6, 9, 1
+
+najbolje je uzeti dionicu na dan kad ona ima vrijednost 2 i prodat je na dan kad ima vrijednost 9, nasa zarada je 7
+
+#include <iostream>
+
+using namespace std;
+
+int NajvecaZarada(int niz[], int pocetak, int kraj) {
+    if(pocetak == kraj) {
+        return 0;
+    }
+    int sredina = (pocetak + kraj) / 2;
+    int max_lijeva_zarada = NajvecaZarada(niz,pocetak,sredina);
+    int max_desna_zarada = NajvecaZarada(niz,sredina+1,kraj);
+    int lijevi_min = niz[pocetak];
+    for(int i = pocetak + 1; i <= sredina; i++) {
+        if(niz[i] < lijevi_min) {
+            lijevi_min = niz[i];
+        }
+    }
+    int desni_max=niz[sredina+1];
+    for(int i = sredina + 2; i <= kraj; i++) {
+        if(niz[i] > desni_max) {
+            desni_max = niz[i];
+        }
+    }
+    return max(max(max_lijeva_zarada,max_desna_zarada),desni_max-lijevi_min);
+}
+
+int main()
+{
+    int niz[] = {4,10,5,2,6,9,1};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    cout << NajvecaZarada(niz,0,n-1);
+    return 0;
+}
+
+
+vremenska kompleknost :  O(n*logn)
+
+

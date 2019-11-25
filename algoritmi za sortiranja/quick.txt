@@ -1,0 +1,41 @@
+#include <iostream>
+
+using namespace std;
+
+int Particija(int niz[], int pocetak, int kraj){
+    int pivot = niz[pocetak];                   // za pivota uzeli prvi element
+    int p = pocetak + 1;
+    while(p <= kraj && niz[p] < pivot) {
+        p++;                                    // trazimo prvi element veci od pivota
+    }                                           // na kraju ce se na poziciji "p" nalaziti prvi element veci od pivota
+    for(int i = p+1; i <= kraj; i++) {
+        if(niz[i] < pivot){                     // poslije pozicije "p" trazimo elemente koji su manji od pivota
+            int temp = niz[p];                  // ako nadjemo, mijenjamo taj element sa elementom na poziciji "p"
+            niz[p] = niz[i];                    // i poslije toga moramo povecat "p"
+            niz[i] = temp;
+            p++;
+        }
+    }
+                                            // na kraju mijenjamo prvi element (pivot) sa elementom na poziciji "p-1"
+    niz[pocetak] = niz[p-1];                // poslije toga nam se na poziciji "p-1" nalazi pivot
+    niz[p-1] = pivot;                       // ispod su svi elemti manji od pivota, a poslije svi veci od pivota
+    return p-1;             // vracamo index pivota
+}
+
+void QuickSort(int niz[], int pocetak, int kraj){
+    if(pocetak < kraj){
+        int j = Particija(niz,pocetak,kraj);
+        QuickSort(niz,pocetak,j-1);
+        QuickSort(niz,j+1,kraj);
+    }
+}
+
+int main()
+{
+    int niz[] = {42,36,17,54,49,22,63,57,20,46};
+    QuickSort(niz,0,9);
+    for(int i = 0; i < 10; i++){
+        cout << niz[i] << " ";
+    }
+    return 0;
+}

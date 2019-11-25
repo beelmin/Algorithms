@@ -1,0 +1,40 @@
+Dat je niz brojeva koji sadrzi duplikate. Ispisati brojeve i njihov broj ponavljanja tj. broj duplikata za svaki broj .
+
+#include <iostream>
+#include <unordered_map>
+
+using namespace std;
+
+void BrojPonavljanja(int niz[], int n) {
+    unordered_map<int,int> mapa;
+    for(int i = 0; i < n; i++){
+        mapa[niz[i]]++;
+    }
+    for(auto x : mapa){
+        cout << x.first << " " << x.second << endl;
+    }
+}
+
+void BrojPonavljanjaIstiRedoslijed(int niz[], int n){
+    unordered_map<int,int> mapa;
+    for(int i = 0; i < n; i++){
+        mapa[niz[i]]++;
+    }
+    for(int i = 0; i < n; i++){
+        if(mapa[niz[i]] != -1){
+            cout << niz[i] << " " << mapa[niz[i]] << endl;
+            mapa[niz[i]] = -1;
+        }
+    }
+}
+
+
+int main()
+{
+    int niz[] = {10,20,30,10,20};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    BrojPonavljanjaIstiRedoslijed(niz,n);
+    return 0;
+}
+
+vremenska kompleknost :  O(n)

@@ -1,0 +1,47 @@
+Data nam je donja trougaona matrica. Potrebno je izracunati najvecu sumu puta od pozicije (0,0) pa do neke pozicije u zadnjem redu.
+Iz svake celije mozemo otici :  jedno mjesto dole ili jedno mjesto dole-desno (dijagonala)
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main()
+{
+
+    vector<vector<int> > matrica = {{1},{1,2}, {4,1,2}, {2,3,1,1}};
+    int n = matrica.size();
+
+    vector<vector<int> > dp = matrica;
+
+    for(int i = 1; i < n; i++) {
+        // popunimo prvu kolonu
+        dp[i][0] += dp[i-1][0];
+        // popunimo dijagonalu
+        dp[i][i] += dp[i-1][i-1];
+
+        for(int j = 1; j < i; j++) {
+            dp[i][j] += max(dp[i-1][j-1],dp[i-1][j]);
+        }
+    }
+
+    /* ispis dp-a da vidimo je li dobro popunjena
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < dp[i].size(); j++) {
+            cout << dp[i][j] << " ";
+        }
+        cout << endl;
+    }
+    */
+    
+    int najveci = dp[n-1][0];
+    for(int i = 1; i < n; i++){
+        if(dp[n-1][i] > najveci){
+            najveci = dp[n-1][i];
+        }
+    }
+
+    cout << najveci << endl;
+
+    return 0;
+}

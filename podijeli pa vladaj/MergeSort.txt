@@ -1,0 +1,65 @@
+#include <iostream>
+
+using namespace std;
+
+void mergesort(int niz[], int pocetak, int sredina, int kraj){
+    int n1 = sredina - pocetak + 1;         // lijevi podniz ima elemenata : sredina - pocetak + 1   jer je  [pocetak ... sredina]
+    int n2 = kraj - sredina;                // desni podniz ima elemenata : kraj - (sredina + 1) + 1 = kraj - sredina   jer je [sredina+1 ... kraj]
+    int *nizL = new int[n1];            // pomocni niz za lijevi podniz
+    int *nizD = new int[n2];            // pomocni niz za desni podniz
+    for(int i = 0; i < n1; i++) {
+        nizL[i] = niz[pocetak + i];           // lijevi podniz ide od [pocetak....sredina]
+    }
+    for(int j = 0; j < n2; j++) {
+        nizD[j] = niz[sredina + 1 + j];     // desni podniz ide od [sredina+1 ... kraj]
+    }
+    int i = 0;          // pocetni index lijevog podniza
+    int j = 0;          // pocetni index desnog podniza
+    int k = pocetak;    // pocetni index sortiranog niza
+    while(i < n1 && j < n2){                            // u ovoj while petlji spajamo sortirani lijevi i desni podniz u originalni niz
+        if(nizL[i] <= nizD[j]){
+            niz[k] = nizL[i];
+            i++;
+        }else{
+            niz[k] = nizD[j];
+            j++;
+        }
+        k++;
+    }
+    while(i < n1){                  // ako je ostao neki element u lijevom podnizu kopiramo ga u originalni niz
+        niz[k] = nizL[i];
+        i++;
+        k++;
+    }
+    while(j < n2) {                 // ako je ostao neki element u desnom podnizu kopiramo ga u originalni niz
+        niz[k] = nizD[j];
+        j++;
+        k++;
+    }
+    delete[] nizL;          // oslobodimo memoriju koju smo dinamicki alocirali na pocetku
+    delete[] nizD;
+}
+
+void MergeSort(int niz[], int pocetak, int kraj){
+    if(pocetak < kraj){                                     // dijelimo dok podniz ne bude imao samo 1 element
+        int sredina = (pocetak + kraj) / 2;
+        MergeSort(niz,pocetak,sredina);
+        MergeSort(niz,sredina+1,kraj);
+        mergesort(niz,pocetak,sredina,kraj);
+    }
+}
+
+
+int main() {
+
+  int niz[] = {12, 11, 13, 5, 6, 7};
+  int n = sizeof(niz) / sizeof(niz[0]);
+  MergeSort(niz,0,n-1);
+  for(int i = 0; i < n; i++){
+    cout << niz[i] << " ";
+  }
+  return 0;
+}
+
+vremenska kompleksnost :  O(n*logn)
+pomocni prostor :  O(n)

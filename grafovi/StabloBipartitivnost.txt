@@ -1,0 +1,74 @@
+/*
+Naziv : Mahmoud and Ehab and the bipartiteness
+Tagovi : dfs and similar, graphs, trees
+Tezina : 1400
+Vremenska kompleksnost :  O( V + E )
+*/
+
+
+#include <iostream>
+#include <list>
+#include <vector>
+
+using namespace std;
+
+class Graf {
+    int V;
+    list<int> *lista;
+    void DFS(int cvor, int roditelj, vector<int> &boje, int boja);
+public:
+    Graf(int V) {
+        this->V = V;
+        lista = new list<int> [V];
+    }
+    void DodajGranu(int u, int v) {
+        lista[u].push_back(v);
+        lista[v].push_back(u);
+    }
+    int MaxBrojGrana();
+
+};
+
+void Graf::DFS(int cvor, int roditelj, vector<int> &boje, int boja) {
+    boje[boja]++;
+    list<int>::iterator it;
+    for(it = lista[cvor].begin(); it != lista[cvor].end(); ++it){
+        if(*it != roditelj) {
+            DFS(*it,cvor,boje,!boja);
+        }
+    }
+    return;
+}
+
+int Graf::MaxBrojGrana() {
+    vector<int> boje(2,0);
+
+    DFS(1,0,boje,0);
+
+    int boja1 = boje[0];
+    int boja2 = boje[1];
+    int rezultat = (boja1 * boja2) - (V-2);
+
+    return rezultat;
+}
+
+
+
+
+int main()
+{
+    int n;
+    cin >> n;
+    Graf g(n+1);
+
+    for(int i = 1; i < n; i++) {
+        int cvor1,cvor2;
+        cin >> cvor1 >> cvor2;
+        g.DodajGranu(cvor1,cvor2);
+    }
+
+    cout << g.MaxBrojGrana();
+
+
+    return 0;
+}

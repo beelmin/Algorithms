@@ -1,0 +1,73 @@
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+void Ispisi(stack<int> S) {
+
+    while(!S.empty()) {
+
+        cout << S.top() << " ";
+        S.pop();
+
+    }
+
+    cout << endl;
+
+}
+
+stack<int> SortirajStek(stack<int> S) {
+
+   stack<int> rezultat;
+
+   while(!S.empty()) {
+
+
+        int temp = S.top();
+        S.pop();
+
+        while(!rezultat.empty() && rezultat.top() < temp) {
+
+            S.push(rezultat.top());
+            rezultat.pop();
+
+        }
+
+        rezultat.push(temp);
+
+   }
+
+   return rezultat;
+
+}
+
+void SortirajNiz(int niz[], int n) {
+
+    stack<int> S;
+    for(int i = 0; i < n; i++) {
+        S.push(niz[i]);
+    }
+
+    stack<int> temp = SortirajStek(S);
+
+    for(int i = 0; i < n; i++) {
+        niz[i] = temp.top();
+        temp.pop();
+    }
+
+}
+
+
+int main()
+{
+    int niz[] = {10,5,7,15,3,1};
+    int n = sizeof(niz) / sizeof(niz[0]);
+
+    SortirajNiz(niz,n);
+
+    for(int i = 0; i < n; i++) {
+        cout <<niz[i] << " ";
+    }
+
+   return 0;
+}

@@ -1,0 +1,80 @@
+#include <iostream>
+#include <list>
+#include <queue>
+#include <vector>
+
+using namespace std;
+
+class Graf {
+    int V;
+    list<int> *lista;
+public:
+    Graf(int V);
+    void DodajGranu(int v, int w);
+    void PohlepnoBojenje();
+};
+
+Graf::Graf(int V){
+    this->V = V;
+    lista = new list<int>[V];
+}
+
+void Graf::DodajGranu(int v, int w) {
+    lista[v].push_back(w);
+    lista[w].push_back(v);
+}
+
+void Graf::PohlepnoBojenje() {
+    vector<int> rezultat(V);
+    rezultat[0] = 0;                                // cvor 0 smo obojili bojom 0
+    for(int i = 1; i < rezultat.size(); i++) {
+        rezultat[i] = -1;                           // ostali cvorovi su neobojeni
+    }
+    vector<bool> dostupne_boje(V);
+    for(int i = 0; i < dostupne_boje.size(); i++) {     // imamo dostupnih boja koliko ima cvorova
+        dostupne_boje[i] = true;
+    }
+
+    for(int i = 1; i < V; i++){
+        list<int>::iterator it;
+        for(it = lista[i].begin(); it != lista[i].end(); it++) {
+            if(rezultat[*it] != -1) {
+                dostupne_boje[rezultat[*it]] = false;              // ovo znaci da mu je susjed obojen u boju i da je ta boja zauzeta
+            }
+        }
+        int boja;
+        for(boja = 0; boja < V; boja++){
+            if(dostupne_boje[boja] == true){        // trazimo prvu slobodnu boju
+                break;
+            }
+        }
+        rezultat[i] = boja;
+        for(it = lista[i].begin(); it != lista[i].end(); it++){
+            if(rezultat[*it] != -1){
+                dostupne_boje[rezultat[*it]] = true;            // resetujemo boje od susjeda jer cemo mozda neku od njih iskoristit u sljedecoj iteraciji
+            }
+        }
+    }
+
+    for(int i = 0; i < rezultat.size(); i++){
+        cout << "Cvor : " << i << " boja : " << rezultat[i] << endl;
+    }
+
+}
+
+
+int main() {
+
+  Graf g(5);
+  g.DodajGranu(0,1);
+  g.DodajGranu(0,2);
+  g.DodajGranu(1,2);
+  g.DodajGranu(1,3);
+  g.DodajGranu(2,3);
+  g.DodajGranu(3,4);
+  g.PohlepnoBojenje();
+
+  return 0;
+}
+
+vremenska kompleksnost :  O( V^2 + E )

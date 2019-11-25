@@ -1,0 +1,30 @@
+Naci element koji se pojavljuje jednom u nizu gdje se svaki drugi element pojavljuje dva puta.
+
+ideja :
+koristit XOR
+
+a ^ a = 0
+a ^ 0 = a 
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int niz[] = {7,3,5,4,5,3,4};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    int broj = niz[0];
+    for(int i = 1; i < n; i++) {
+        broj ^= niz[i];
+    }
+    cout << broj;
+
+    return 0;
+}
+
+
+7 ^ 3 ^ 5 ^ 4 ^ 5 ^ 3 ^ 4 = 7 ^ ( 3 ^ 3 ) ^ ( 4 ^ 4 ) ^ ( 5 ^ 5 )  =
+                                   = 7 ^ 0 ^ 0 ^ 0 = 7
+
+vremenska kompleksnost :  O(n)

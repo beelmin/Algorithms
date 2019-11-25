@@ -1,0 +1,75 @@
+Usmjereni graf
+Ispisi sve puteve od izvora do odredista
+
+#include <iostream>
+#include <list>
+#include <vector>
+
+using namespace std;
+
+class Graf {
+    int V;
+    list<int> *lista;
+    void IspisiPuteve(int izvor, int odrediste, vector<bool> &posjecen, vector<int> &put);
+public:
+    Graf(int V) {
+        this->V = V;
+        lista = new list<int> [V];
+    }
+    void DodajGranu(int u, int v) {
+        lista[u].push_back(v);
+    }
+    void IspisiPuteve(int izvor, int odrediste);
+    void IspisiPut(vector<int> &put, int cvor);
+
+};
+
+void Graf::IspisiPut(vector<int> &put, int cvor) {
+    if(put[cvor] == -1) {
+        cout << cvor << " ";
+        return;
+    }
+    IspisiPut(put,put[cvor]);
+    cout << cvor << " ";
+}
+
+void Graf::IspisiPuteve(int izvor, int odrediste, vector<bool> &posjecen, vector<int> &put) {
+
+    posjecen[izvor] = true;
+
+    if(izvor == odrediste){
+        IspisiPut(put,izvor);
+        cout << endl;
+    }else {
+        list<int>::iterator it;
+        for(it = lista[izvor].begin(); it != lista[izvor].end(); it++) {
+            if(!posjecen[*it]) {
+                put[*it] = izvor;
+                IspisiPuteve(*it,odrediste,posjecen,put);
+            }
+        }
+    }
+    posjecen[izvor] = false;
+}
+
+void Graf::IspisiPuteve(int izvor, int odrediste) {
+    vector<bool> posjecen(V,false);
+    vector<int> put(V);
+    put[izvor] = -1;
+    IspisiPuteve(izvor,odrediste,posjecen,put);
+}
+
+int main(){
+
+    Graf g(4);
+    g.DodajGranu(0, 1);
+    g.DodajGranu(0, 2);
+    g.DodajGranu(0, 3);
+    g.DodajGranu(2, 0);
+    g.DodajGranu(2, 1);
+    g.DodajGranu(1, 3);
+
+    g.IspisiPuteve(2,3);
+
+    return 0;
+}

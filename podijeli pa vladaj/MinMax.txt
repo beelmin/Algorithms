@@ -1,0 +1,61 @@
+#include <iostream>
+
+using namespace std;
+
+struct par {
+    int Min;
+    int Max;
+};
+
+par MinMax(int niz[], int pocetak, int kraj) {
+    par rez,mml,mmr;
+
+    if(pocetak == kraj) {               // ako ima samo 1 element
+        rez.Min = niz[pocetak];
+        rez.Max = niz[pocetak];
+        return rez;
+    }
+
+    if(kraj == pocetak + 1){            // ako imaju samo 2 elementa
+        if(niz[pocetak] > niz[kraj]){
+            rez.Min = niz[kraj];
+            rez.Max = niz[pocetak];
+        }else{
+            rez.Min = niz[pocetak];
+            rez.Max = niz[kraj];
+        }
+        return rez;
+    }
+
+    int sredina = (pocetak + kraj) / 2;     // ako ima vise od 2 elementa
+    mml = MinMax(niz,pocetak,sredina);
+    mmr = MinMax(niz,sredina+1,kraj);
+
+    if(mml.Min < mmr.Min){
+        rez.Min = mml.Min;
+    }else{
+        rez.Min = mmr.Min;
+    }
+
+    if(mml.Max > mmr.Max){
+        rez.Max = mml.Max;
+    }else{
+        rez.Max = mmr.Max;
+    }
+
+    return rez;
+}
+
+int main()
+{
+    int niz[] = {3,5,1,2,10,7};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    par proba = MinMax(niz,0,n-1);
+    cout << proba.Min << " " << proba.Max << endl;
+    return 0;
+}
+
+
+vremenska kompleksnost :  O(n)
+
+imamo manje od (3/2)n poredjenja ako je "n" stepen broja 2

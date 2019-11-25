@@ -1,0 +1,38 @@
+Dat je niz koji se sastoji od 1 i 0. Poslije zadnje 1 slijede sve 0. Izbroji sve 0.
+
+ideja: prepravit binarnu pretragu jer je niz sortiran
+
+#include <iostream>
+
+using namespace std;
+
+int broj(int niz[], int pocetak, int kraj){
+    if(pocetak <= kraj) {
+        int sredina = (pocetak + kraj) / 2;
+        if(niz[sredina] == 0 && (niz[sredina-1] == 1 || sredina == 0)) {
+            return sredina;
+        }
+        if(niz[sredina] == 1){    // 0 se nalaze u desnoj polovini
+            return broj(niz,sredina+1,kraj);
+        }else{                                  // ako je srednji element 0 ali nije prva, onda idemo u lijevu polovinu
+            return broj(niz,pocetak,sredina-1);
+        }
+    }
+    return -1;
+}
+
+int main()
+{
+    int niz[] = {1,0};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    int prva = broj(niz,0,n);
+    if(prva == -1){
+        cout << 0 << endl;
+    }else{
+        cout << n-prva << endl;
+    }
+
+    return 0;
+}
+
+vremenska kompleksnost : O(log(n))

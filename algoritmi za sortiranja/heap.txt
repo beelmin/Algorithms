@@ -1,0 +1,159 @@
+#include <iostream>
+
+using namespace std;
+
+class Heap {
+    int *niz;       // elementi niza
+    int kapacitet;      // maksimalna velicina heap-a
+    int velicina;       // trenutan broj elemenata u heap-u
+    void PopraviDole(int i);
+    void PopraviGore(int i);
+public:
+    Heap(int maxduzina) {
+        kapacitet = maxduzina;
+        niz = new int[kapacitet];
+        velicina = 0;
+    }
+    void Ucitaj(int n);
+    void StvoriHeap();
+    bool JeLiList(int i) const {
+        return (i >= velicina/2) && (i < velicina);
+    }
+    int LijevoDijete(int i) const {
+        return 2*i + 1;                 // pozicija lijevog djeteta
+    }
+    int DesnoDijete(int i) const {
+        return 2*i + 2;                 // pozicija desnog djeteta
+    }
+    int Roditelj(int i) const {
+        return (i-1)/2;                 // pozicija roditelja
+    }
+    int DajVelicinu() const { return velicina; }
+    void Umetni(const int &x);
+    void PromjeniKljuc(int i, const int &x);
+    void IzbaciPrvi();
+    void Izbaci(int i);
+    void HeapSort();
+    void Ispis(int n);
+    ~Heap() { delete[] niz;}
+};
+
+void Heap::Ucitaj(int n){
+    for(int i = 0; i < n; i++){
+        int x;
+        cin >> x;
+        niz[i] = x;
+    }
+    velicina = n;
+}
+
+void Heap::StvoriHeap() {
+    for(int i = velicina/2; i>=0; i--){
+        PopraviDole(i);
+    }
+}
+
+void Heap::PopraviDole(int i){
+    while(JeLiList(i) == false){
+        int veci = LijevoDijete(i);
+        int dd = DesnoDijete(i);
+        if(dd < velicina && niz[dd] > niz[veci]){
+            veci = dd;
+        }
+        if(niz[i] > niz[veci]){
+            return;
+        }
+        int temp = niz[i];
+        niz[i] = niz[veci];
+        niz[veci] = temp;
+        i = veci;
+    }
+
+}
+
+void Heap::PopraviGore(int i) {
+    while(i != 0 && niz[i] > niz[Roditelj(i)]){
+        int temp = niz[i];
+        niz[i] = niz[Roditelj(i)];
+        niz[Roditelj(i)] = temp;
+        i = Roditelj(i);
+    }
+}
+
+void Heap::Umetni(const int &x){
+    if(velicina > kapacitet - 1){
+        throw "Heap je pun";
+    }
+    niz[velicina] = x;
+    velicina++;
+    PopraviGore(velicina-1);
+}
+
+void Heap::PromjeniKljuc(int i, const int &x){
+    if(niz[i] >= x){
+        throw "Nova vrijednost kljuca je manja od stare";
+    }
+    niz[i] = x;
+    PopraviGore(i);
+}
+
+void Heap::IzbaciPrvi() {
+    if(velicina == 0){
+        throw "Heap je prazan";
+    }
+    velicina--;
+    int temp = niz[0];
+    niz[0] = niz[velicina];
+    niz[velicina] = temp;
+    if(velicina != 0){
+        PopraviDole(0);
+    }
+}
+
+void Heap::Izbaci(int i){
+    if(i < 0 || i >= velicina){
+        throw "Index izvan dozvoljenog raspona";
+    }
+    velicina--;
+    int temp = niz[i];
+    niz[i] = niz[velicina];
+    niz[velicina] = temp;
+    PopraviGore(i);
+    PopraviDole(i);
+}
+
+void Heap::HeapSort() {
+    int duzina = velicina;
+    for(int i = 0; i <= duzina-2; i++){
+        IzbaciPrvi();
+    }
+}
+
+void Heap::Ispis(int n) {
+    cout << "Elemeti heap-a : " << endl;
+    for(int i=0; i<n; i++){
+        cout << niz[i] << endl;
+    }
+}
+
+int main()
+{
+    Heap proba(20);
+    int x;
+    cout << "Unesite broj elemenata niza ( <= 20 ) : ";
+    cin >> x;
+    if( x <= 20){
+        proba.Ucitaj(x);
+
+    }else{
+        cout << "Broj elemenata veci od 20";
+    }
+
+    proba.StvoriHeap();
+    proba.HeapSort();
+    proba.Ispis(x);
+
+
+
+    return 0;
+}

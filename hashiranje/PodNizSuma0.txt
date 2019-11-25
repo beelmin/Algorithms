@@ -1,0 +1,29 @@
+Dat je niz brojeva (pozitivnih i negativni) . Da li postoji podniz cija je suma jednaka 0. Misli se na podniz uzastopnih brojeva.
+
+#include <iostream>
+#include <unordered_set>
+
+using namespace std;
+
+bool PostojiPodNiz(int niz[], int n) {
+    unordered_set<int> s;
+    int suma = 0;
+    for(int i = 0; i < n; i++) {
+        suma += niz[i];
+        if(suma == 0 || s.find(suma) != s.end()){
+            return true;
+        }
+        s.insert(suma);
+    }
+    return false;
+}
+
+int main()
+{
+    int niz[] = {4, 2, -3, 1, 6};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    cout << PostojiPodNiz(niz,n);
+    return 0;
+}
+
+vremenska kompleknost :  O(n)  ako za hash f-ju vrijedi da je umetanje i traganje O(1) ali to se podrazumjeva

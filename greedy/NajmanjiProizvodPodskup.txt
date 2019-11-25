@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int NajmanjiProizvod(vector<int> &v) {
+    int n = v.size();
+    int br_negativnih = 0;
+    int br_nula = 0;
+    int najveci_negativni = INT_MIN;
+    int najmanji_pozitivni = INT_MAX;
+    int proizvod = 1;
+
+    for(int i = 0; i < n; i++) {
+
+        if(v[i] == 0) {
+            br_nula++;
+            continue;
+        }
+
+        if(v[i] < 0) {
+            br_negativnih++;
+            najveci_negativni = max(najveci_negativni,v[i]);
+        }
+
+        if(v[i] > 0) {
+            najmanji_pozitivni = min(najmanji_pozitivni,v[i]);
+        }
+
+        proizvod *= v[i];
+
+    }
+
+    if(br_negativnih == 0 && br_nula > 0) { // primjer 0,0,1,2,3,4 rez je 0
+        return 0;
+    }
+
+    if(br_negativnih == 0 && br_nula == 0) {   // primjer 1,2,3,4,5 rez je 1
+        return najmanji_pozitivni;
+    }
+
+
+    if(br_negativnih % 2 == 0 && br_negativnih != 0) {  // primjer -5,-4,0,1,2,3 rez je -30
+        proizvod = proizvod / najveci_negativni;
+        return proizvod;
+    }
+
+    if(br_negativnih % 2 != 0){   // primjer -5,-4,-3,0,1,2,3 rez je -360
+       return proizvod;
+    }
+
+
+}
+
+
+int main()
+{
+
+    vector<int> v = {-5,-4,-3,0,1,2,3};
+
+    cout << NajmanjiProizvod(v);
+
+
+    return 0;
+}

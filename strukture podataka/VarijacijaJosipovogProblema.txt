@@ -1,0 +1,24 @@
+#include <iostream>
+
+using namespace std;
+
+int Prezivljava(int n, int k) {			// rekurzivna relacija T(n) = T(n-1) + c pa je vremenska slozenost O(n)
+    if(n == 1) {
+        return 1;
+    }
+    return ((( Prezivljava(n-1,k) + k - 1 ) % n) + 1);
+}
+int main()
+{
+    int n = 10;
+    int k = 1;
+    int pozicija = 5;  // pozicija za prezivljavanje
+
+    while(Prezivljava(n,k) != pozicija){
+        k++;
+    }
+
+    cout << k << endl;
+
+    return 0;
+}

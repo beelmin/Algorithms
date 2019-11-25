@@ -1,0 +1,71 @@
+Dat je niz od "n" brojeva. Pronadji najveci proizvod trojki u nizu.
+
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int VratiMax(int niz[], int n) {
+
+    sort(niz,niz+n);
+    return max(niz[0]*niz[1]*niz[n-1], niz[n-3]*niz[n-2]*niz[n-1]);
+
+}
+
+
+int main() {
+
+    int niz[] = {-10,-5,0,1,2,5,10};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    cout << VratiMax(niz,n);
+
+    return 0;
+}
+
+vremenska kompleksnost: O (n*logn)
+
+
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int VratiMax(int niz[], int n) {
+
+    int maxA = INT_MIN, maxB = INT_MIN, maxC = INT_MIN;
+    int minA = INT_MAX, minB = INT_MAX;
+
+    for(int i = 0; i < n; i++) {
+        if(niz[i] > maxA) {             // ako je veci od najveceg
+            maxC = maxB;
+            maxB = maxA;
+            maxA = niz[i];
+        }else if(niz[i] > maxB) {       // ako je najveci od drugog najveceg
+            maxC = maxB;
+            maxB = niz[i];
+        }else if(niz[i] > maxC) {       // ako je  najveci od treceg najveceg
+            maxC = niz[i];
+        }
+
+        if(niz[i] < minA) {             // ako je manji od najmanjeg
+            minB = minA;
+            minA = niz[i];
+        }else if(niz[i] < minB) {       // ako je manji od drugog najmanjeg
+            minB = niz[i];
+        }
+    }
+
+    return max(minA * minB * maxA, maxA * maxB * maxC);
+}
+
+
+int main() {
+
+    int niz[] = {1,-5,0,5,-10,4,2};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    cout << VratiMax(niz,n);
+
+    return 0;
+}
+
+vremenska kompleksnost :  O(n)

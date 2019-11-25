@@ -1,0 +1,32 @@
+Data je suma S = 4 i novcici = [1,2,3] . Koliki je ukupan broj nacina da se isplati ta suma ?
+
+nacin1:  1 + 1 + 1 + 1
+nacin2:  1 + 1 + 2
+nacin3:   2 + 2
+nacin4:  1 + 3
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+
+int main() {
+
+    int suma = 30;
+    vector<int> novcici = {5,10,15};
+    vector<int> dp(suma+1,0);
+
+    dp[0] = 1;     // da isplatimo sumu 0 postoji samo 1 nacin a to je da ne koristimo ni jedan novcic
+
+    for(int i = 0; i < novcici.size(); i++) {
+        for(int j = novcici[i]; j <= suma; j++) {
+            dp[j] += dp[j-novcici[i]];
+        }
+    }
+
+    cout << "Ukupan broj nacina da se isplati suma je : " << dp[suma] << endl;
+
+
+    return 0;
+}

@@ -1,0 +1,36 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void HanojskeKule(int n, string izvor, string odrediste, string pomocni) {
+    if(n == 1) {
+        cout << "Prenesi disk 1 sa stapa " << izvor << " na stap " << odrediste << endl;
+        return;
+    }
+    HanojskeKule(n-1,izvor,pomocni,odrediste);
+    cout << "Prenesi disk " << n << " sa stapa "<< izvor <<" na stap " << odrediste << endl;
+    HanojskeKule(n-1,pomocni,odrediste,izvor);
+
+}
+
+int HanojskeKule(int n, string izvor, string odrediste, string pomocni, int &brojac) {
+    if(n == 1) {
+        brojac++;
+        return brojac;
+    }
+    HanojskeKule(n-1,izvor,pomocni,odrediste,brojac);
+    brojac++;
+    HanojskeKule(n-1,pomocni,odrediste,izvor,brojac);
+    return brojac;
+
+}
+
+
+int main() {
+  int brojac = 0;
+  int n = 4;
+  HanojskeKule(n,"IZVOR","ODREDISTE","POMOCNI");
+  cout << "Broj premjestanja : " << HanojskeKule(n,"IZVOR","ODREDISTE","POMOCNI",brojac);
+  return 0;
+}

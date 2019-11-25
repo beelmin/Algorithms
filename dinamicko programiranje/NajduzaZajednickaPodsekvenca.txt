@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+
+int main()
+{
+
+    string prvi = "AGGTAB";
+    string drugi = "GXTXAYB";
+
+    int n = prvi.size();
+    int m = drugi.size();
+
+    vector<vector<int> > tablica(n+1);
+
+    for(int i = 0; i <= n; i++) {
+        tablica[i].resize(m+1);
+        for(int j = 0; j <= m; j++) {
+            if(i == 0 ||j == 0) {
+                tablica[i][j] = 0;
+            }else if(prvi[i-1] == drugi[j-1]){
+                tablica[i][j] = 1 + tablica[i-1][j-1];
+            }else{
+                tablica[i][j] = max(tablica[i][j-1],tablica[i-1][j]);
+            }
+        }
+    }
+
+    cout << "Duzina najduze zajednicke podsekvence je : " << tablica[n][m] << endl;
+
+    vector<char> rezultat;
+
+    int i = n, j = m;
+
+    while(i > 0 && j > 0) {
+        if(prvi[i-1] == drugi[j-1]){        // ako su slova ista, uzmemo slovo i idemo dijagonalno
+            rezultat.push_back(prvi[i-1]);
+            i--;
+            j--;
+        }else if(tablica[i][j-1] > tablica[i-1][j]) {       // poredimo vrijednosti lijeve i gornje celije
+             j--;                                                       // i idemo u smjeru vece
+        }else{
+            i--;
+        }
+    }
+
+    string podsekvenca = "";
+    for(int i = rezultat.size()-1; i >= 0; i--) {
+        podsekvenca += rezultat[i];
+    }
+
+    cout << "Najduza zajednicka podsekvenca je : " << podsekvenca << endl;
+
+
+    return 0;
+}

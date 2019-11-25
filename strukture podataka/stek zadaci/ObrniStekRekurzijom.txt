@@ -1,0 +1,59 @@
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+void Ispisi(stack<int> S) {
+
+    while(!S.empty()) {
+
+        cout << S.top() << " ";
+        S.pop();
+    }
+
+    cout << endl;
+}
+
+void UmetniNaDno(stack<int> &S, int x) {
+
+    if(S.empty()) {
+        S.push(x);
+        return;
+    }
+
+    int temp = S.top();
+    S.pop();
+    UmetniNaDno(S,x);
+    S.push(temp);
+
+}
+
+void ObrniStek(stack<int> &S) {
+
+    if(!S.empty()) {
+
+        int x = S.top();
+        S.pop();
+        ObrniStek(S);
+        UmetniNaDno(S,x);
+    }
+
+}
+
+
+
+
+int main()
+{
+    stack<int> S;
+    S.push(1);
+    S.push(2);
+    S.push(3);
+    S.push(4);
+
+    Ispisi(S);
+    ObrniStek(S);
+    Ispisi(S);
+
+   return 0;
+}

@@ -1,0 +1,26 @@
+#include <iostream>
+
+using namespace std;
+
+int LokalniMinimum(int niz[], int pocetak, int kraj, int n) {
+    int sredina = (pocetak + kraj) / 2;
+    if(sredina-1 < 0 || sredina+1 >= n) {
+        return -1;
+    }
+    if(niz[sredina+1] > niz[sredina] && niz[sredina-1] > niz[sredina]) {
+        return sredina;
+    }
+    if(niz[sredina] > niz[sredina-1]) {
+        return LokalniMinimum(niz,pocetak,sredina,n);
+    }else{
+        return LokalniMinimum(niz,sredina,kraj,n);
+    }
+}
+
+int main()
+{
+    int niz[] = {5,1,4};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    cout << LokalniMinimum(niz,0,n,n);
+    return 0;
+}

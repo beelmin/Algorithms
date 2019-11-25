@@ -1,0 +1,21 @@
+#include <iostream>
+
+using namespace std;
+
+double stepen(double x, int n) {
+  if(n == 1)
+    return x;
+  double rez = stepen(x,n/2);
+  if(n % 2 == 0)
+    return rez * rez;
+  else return x * rez * rez;
+}
+
+int main()
+{
+    cout << stepen(2,6);
+
+    return 0;
+}
+
+vremenska kompleksnost :  O( log(n) )

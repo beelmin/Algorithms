@@ -1,0 +1,33 @@
+#include <iostream>
+
+using namespace std;
+
+void CountingSort(int A[], int B[], int n, int k){
+    int *C = new int[k+1];
+    for(int i = 0; i <= k; i++){
+        C[i] = 0;
+    }
+    for(int j = 0; j < n; j++){
+        C[A[j]] = C[A[j]] + 1;
+    }
+    for(int i = 1; i <= k; i++){
+        C[i] = C[i] + C[i-1];
+    }
+    for(int j = n-1; j >= 0; j--){
+        C[A[j]] = C[A[j]] - 1;
+        B[C[A[j]]] = A[j];
+    }
+    delete[] C;
+}
+
+int main()
+{
+    int niz[]={2,0,5,4,2,1,2,4};
+    int *niz1 = new int[8];
+    CountingSort(niz,niz1,8,5);
+    for(int i = 0; i < 8; i++){
+        cout << niz1[i] << " " ;
+    }
+    delete[] niz1;
+    return 0;
+}

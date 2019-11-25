@@ -1,0 +1,38 @@
+Imamo sortiran niz. Ispisati sve trojke cija je suma 0.
+
+#include <iostream>
+
+using namespace std;
+
+
+void NadjiTrojke(int niz[], int n) {
+
+    for(int i = 0; i <= n-2; i++) {
+        int pocetak = i+1;
+        int kraj = n-1;
+        int x = niz[i];
+        while(pocetak < kraj) {
+            if(x + niz[pocetak] + niz[kraj] == 0) {
+                cout << x << " " << niz[pocetak] << " " << niz[kraj] << endl;
+                pocetak++;
+                kraj--;
+            }else if(x + niz[pocetak] + niz[kraj] < 0) {
+                pocetak++;
+            }else{
+                kraj--;
+            }
+        }
+    }
+}
+
+int main() {
+
+  int niz[] = {-3,-1,0,1,2};
+  int n = sizeof(niz) / sizeof(niz[0]);
+
+  NadjiTrojke(niz,n);
+
+  return 0;
+}
+
+vremenska slozenost:  O (n ^ 2)

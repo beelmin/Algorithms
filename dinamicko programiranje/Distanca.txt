@@ -1,0 +1,35 @@
+Izracunati ukupan broj nacina da se predje distanca "n" koristeci 1, 2 ili 3 koraka
+primjer :
+
+za n = 3 postoje 4 nacina :
+
+prvi :   1 + 1 + 1
+drugi :  1 + 2
+treci :   2 + 1
+cetvrti:  3
+
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+
+int main()
+{
+    int n = 5;
+
+    vector<int> distanca(n+1);
+
+    distanca[1] = 1;
+    distanca[2] = 2;
+    distanca[3] = 4;
+
+    for(int i = 4; i <= n; i++) {
+        distanca[i] = distanca[i-1] + distanca[i-2] + distanca[i-3];
+    }
+
+    cout << "Ukupan broj nacina da se predje distanca je : " << distanca[n] << endl;
+
+    return 0;
+}

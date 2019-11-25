@@ -1,0 +1,88 @@
+#include <iostream>
+
+using namespace std;
+
+struct Cvor {
+    int element;
+    Cvor *sljedeci;
+};
+
+class Ulancavanje {
+    Cvor *niz;
+    int velicina;
+    int h(const int &k) {
+        return k % velicina;
+    }
+public:
+    Ulancavanje(int vel);
+    void Umetni(const int &x);
+    bool Trazi(const int &x);
+    void Ispisi() const;
+};
+
+Ulancavanje::Ulancavanje(int vel) {
+    velicina = vel;
+    niz = new Cvor[vel];
+    for(int i = 0; i < vel; i++) {
+        niz[i].sljedeci = nullptr;
+    }
+}
+
+void Ulancavanje::Umetni(const int &x) {
+    int index = h(x);
+    Cvor *novi = new Cvor;
+    novi->element = x;
+    novi->sljedeci = nullptr;
+    if(niz[index].sljedeci == nullptr) {
+        niz[index].sljedeci = novi;
+    }else{
+        novi->sljedeci = niz[index].sljedeci;
+        niz[index].sljedeci = novi;
+    }
+}
+
+bool Ulancavanje::Trazi(const int &x) {
+    int index = h(x);
+    if(niz[index].sljedeci == nullptr){
+        return false;
+    }else{
+        Cvor *p = niz[index].sljedeci;
+        while(p != nullptr && p->element != x){
+            p = p->sljedeci;
+        }
+        if(p == nullptr){
+            return false;
+        }else{
+            return true;
+        }
+    }
+}
+
+void Ulancavanje::Ispisi() const {
+    for(int i = 0; i < velicina; i++) {
+        if(niz[i].sljedeci == nullptr){
+            cout << -1 << endl;
+        }else{
+            for(Cvor *p = niz[i].sljedeci; p != nullptr; p = p->sljedeci){
+            cout << p->element << endl;
+            }
+        }
+    }
+}
+
+int main()
+{
+    Ulancavanje T(10);
+    T.Umetni(31);
+    T.Umetni(23);
+    T.Umetni(53);
+    T.Umetni(13);
+    T.Umetni(45);
+    T.Umetni(5);
+    T.Umetni(16);
+    T.Umetni(28);
+    T.Umetni(78);
+    cout << T.Trazi(39);
+
+    return 0;
+}

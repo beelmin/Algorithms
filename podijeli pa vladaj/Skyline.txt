@@ -1,0 +1,116 @@
+#include <iostream>
+
+using namespace std;
+
+struct Zgrada {
+    int lijevo;         // x koordinata lijeve strane
+    int visina;
+    int desno;          // x koordinata desne strane
+
+};
+
+struct Strip {
+    int lijevo;
+    int visina;
+    Strip(int l = 0, int h = 0){
+        lijevo = l;
+        visina = h;
+    }
+};
+
+class SkyLine {
+    Strip *niz;
+    int kapacitet;      // kapacitet niza
+    int n;              // trenutan broj stipova u nizu
+public:
+    SkyLine(int kap) {
+        kapacitet = kap;
+        niz = new Strip[kap];
+        n = 0;
+    }
+    void Dodaj(Strip *s) {
+        if(n>0 && niz[n-1].visina == s->visina){
+            return;
+        }
+        if(n>0 && niz[n-1].lijevo == s->lijevo){
+            niz[n-1].visina = max(niz[n-1].visina, s->visina);
+        }
+        niz[n] = *s;
+        n++;
+    }
+    SkyLine *Merge(SkyLine *s);
+    void Printaj();
+    ~SkyLine() { delete[] niz; }
+};
+
+SkyLine *SkyLine::Merge(SkyLine *s) {
+    SkyLine *rez = new SkyLine(this->n + s->n);
+    int h1 = 0, h2 = 0;
+    int i = 0, j = 0;
+
+    while(i < this->n && j < s->n) {
+        if(this->niz[i].lijevo < s->niz[j].lijevo){
+            int x1 = this->niz[i].lijevo;
+            h1 = this->niz[i].visina;
+            int maxh = max(h1,h2);
+            rez->Dodaj(new Strip(x1,maxh));
+            i++;
+        }else{
+            int x2 = s->niz[j].lijevo;
+            h2 = s->niz[j].visina;
+            int maxh = max(h1,h2);
+            rez->Dodaj(new Strip(x2,maxh));
+            j++;
+        }
+    }
+
+    while(i < this->n){
+        rez->Dodaj(&niz[i]);
+        i++;
+    }
+
+    while(j < s->n) {
+        rez->Dodaj(&s->niz[j]);
+        j++;
+    }
+
+    return rez;
+}
+
+void SkyLine::Printaj() {
+    for (int i = 0; i < n; i++) {
+        cout << "(" << niz[i].lijevo << ", " << niz[i].visina << "), ";
+    }
+}
+
+SkyLine *NadjiSkyLine(Zgrada niz[], int pocetak, int kraj) {
+    if(pocetak == kraj){
+        SkyLine *rez = new SkyLine(2);
+        rez->Dodaj(new Strip(niz[pocetak].lijevo, niz[pocetak].visina));
+        rez->Dodaj(new Strip(niz[pocetak].desno, 0));
+        return rez;
+    }
+
+    int sredina = (pocetak + kraj) / 2;
+    SkyLine *lijevi = NadjiSkyLine(niz,pocetak,sredina);
+    SkyLine *desni = NadjiSkyLine(niz,sredina+1,kraj);
+    SkyLine *rez = lijevi->Merge(desni);
+
+    delete lijevi;
+    delete desni;
+
+    return rez;
+}
+
+
+int main() {
+
+    Zgrada niz[] = {{1, 3, 3}, {2, 4, 4}, {5, 2, 8}, {6, 4, 7}, {8, 4, 9}};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    SkyLine *rez = NadjiSkyLine(niz,0,n-1);
+    rez->Printaj();
+
+   return 0;
+}
+
+vremenska kompleksnost :  O ( n * log(n) )

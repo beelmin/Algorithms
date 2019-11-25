@@ -1,0 +1,31 @@
+Dat je niz brojeva. Da li postoje 3 broja koja formiraju trougao ?
+
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+bool PostojiTrougao(int niz[], int n) {
+
+    sort(niz,niz+n);
+    for(int i = 0; i <= n-3; i++) {
+        if(niz[i] + niz[i+1] > niz[i+2]) {
+            return true;
+        }
+    }
+    return false;
+
+}
+
+
+int main() {
+
+    int niz[] = {5, 4, 3, 1, 2};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    cout << PostojiTrougao(niz,n);
+
+
+    return 0;
+}
+
+vremenska kompleksnost :  O( n * logn)

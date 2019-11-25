@@ -1,0 +1,24 @@
+Da li se zadati element nalazi vise od n/2 puta u sortiranom nizu duzine n
+
+#include <iostream>
+
+using namespace std;
+
+bool VecinskiElement(int niz[], int n, int x){
+    for(int i = 0; i < n; i++){
+        if(niz[i] == x && niz[i + (n/2)] == x){
+            return true;
+        }
+    }
+    return false;
+
+}
+int main()
+{
+    int niz[] = {1, 2, 3, 3, 3, 3, 10};
+    int n = sizeof(niz) / sizeof(niz[0]);
+    cout << VecinskiElement(niz,n,3);
+    return 0;
+}
+
+vremenska kompleksnost :  O(n)

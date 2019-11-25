@@ -1,0 +1,81 @@
+#include <iostream>
+
+using namespace std;
+
+class DvostrukiHash {
+    int *niz;                       // elementi hash tabele
+    int prazno_mjesto;              // oznaka za prazno mjesto
+    int velicina;                   // velicina hash tabele
+    int h(const int &k, int i){      // hash funkcija
+        return (k % velicina + i * (1 + k % (velicina - 2))) % velicina;
+    }
+public:
+    DvostrukiHash(int praznoMjesto, int vel);
+    void Umetni(const int &x);
+    int Trazi(const int &x);
+    void Brisi(const int &x);
+    void Ispis() const;
+    ~DvostrukiHash() { delete[] niz; }
+};
+
+DvostrukiHash::DvostrukiHash(int praznoMjesto, int vel) {
+    velicina = vel;
+    niz = new int[vel];
+    prazno_mjesto = praznoMjesto;
+    for(int i = 0; i < vel; i++) {
+        niz[i] = praznoMjesto;
+    }
+}
+
+void DvostrukiHash::Umetni(const int &x) {
+    int i(0), j;
+    do {
+        j = h(x,i);
+        if(niz[j] == prazno_mjesto){
+            niz[j] = x;
+            break;
+        }else{
+            i++;
+        }
+    }while(i < velicina);
+}
+
+int DvostrukiHash::Trazi(const int &x){
+    int i(0), index;
+    do {
+        index = h(x,i);
+        if(niz[index] == x) {
+            return index;
+        }else{
+            i++;
+        }
+    }while(niz[index] != prazno_mjesto && i != velicina);
+    return prazno_mjesto;
+}
+
+void DvostrukiHash::Brisi(const int &x) {
+    int index = Trazi(x);
+    if(index != prazno_mjesto) {
+        niz[index] = prazno_mjesto;
+    }
+}
+
+void DvostrukiHash::Ispis() const {
+    for(int i = 0; i < velicina; i++){
+        cout << niz[i] << endl;
+    }
+}
+
+int main()
+{
+    DvostrukiHash T(-1,13);
+    T.Umetni(21);
+    T.Umetni(28);
+    T.Umetni(5);
+    T.Umetni(48);
+    T.Umetni(2);
+    T.Umetni(15);
+    T.Ispis();
+
+    return 0;
+}

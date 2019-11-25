@@ -1,0 +1,57 @@
+Generisati sve podskupove zadatog skupa
+
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+void Podskupovi(vector<vector<int> > &rezultat, vector<int> &podskup, vector<int> &skup, int index) {
+
+    for(int i = index; i < skup.size(); i++) {
+        podskup.push_back(skup[i]);
+        rezultat.push_back(podskup);
+        Podskupovi(rezultat,podskup,skup,i+1);
+
+        podskup.pop_back();
+    }
+    return;
+
+}
+
+vector<vector<int> > Podskupovi(vector<int> &skup) {
+
+    vector<int> podskup;
+    vector<vector<int> > rezultat;
+
+    rezultat.push_back(podskup);        // dodamo prazan podskup
+
+    int index = 0;
+    Podskupovi(rezultat, podskup, skup, index);
+
+    return rezultat;
+
+}
+
+
+int main()
+{
+    vector<int> skup = {1,2,3};
+    vector<vector<int> > rezultat = Podskupovi(skup);
+
+    for(int i = 0; i < rezultat.size(); i++) {
+        if(i == 0) {
+            cout << "{}";
+        }
+        for(int j = 0; j < rezultat[i].size(); j++) {
+            cout << rezultat[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+
+    return 0;
+}
+
+
+vremenska kompleksnost :  O ( 2^n )

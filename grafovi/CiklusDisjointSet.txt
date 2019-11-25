@@ -1,0 +1,84 @@
+Provjeriti da li u neusmjerenom grafu postoji ciklus koristeci Disjoint Set.
+
+#include <iostream>
+
+using namespace std;
+
+struct Grana {
+    int izvor;
+    int odrediste;
+};
+
+struct Podset {
+    int roditelj;
+    int rang;
+};
+
+class Graf {
+    int V;
+    int E;
+    Grana *niz;
+    int brojac;
+public:
+    Graf(int V, int E){
+        this->V = V;
+        this->E = E;
+        niz = new Grana[E];
+        this->brojac = 0;
+    }
+    void DodajGranu(int izvor, int odrediste){
+        niz[brojac].izvor = izvor;
+        niz[brojac].odrediste = odrediste;
+        brojac++;
+    }
+    int Nadji(Podset podset[], int i){
+        if(podset[i].roditelj != i){
+          podset[i].roditelj = Nadji(podset,podset[i].roditelj);
+        }
+        return podset[i].roditelj;
+    }
+    void Unija(Podset podset[], int x, int y) {
+        int x_korijen = Nadji(podset,x);
+        int y_korijen = Nadji(podset,y);
+        if(podset[x_korijen].rang < podset[y_korijen].rang){
+            podset[x_korijen].roditelj = y_korijen;
+        }else if(podset[x_korijen].rang > podset[y_korijen].rang){
+            podset[y_korijen].roditelj = x_korijen;
+        }else{
+            podset[y_korijen].roditelj = x_korijen;
+            podset[x_korijen].rang++;
+        }
+    }
+    bool PostojiCiklus();
+
+};
+
+bool Graf::PostojiCiklus() {
+    Podset *podset = new Podset[V];
+    for(int i = 0; i < V; i++){
+        podset[i].roditelj = i;
+        podset[i].rang = 0;
+    }
+    for(int i = 0; i < E; i++) {
+        int x = Nadji(podset, niz[i].izvor);
+        int y = Nadji(podset, niz[i].odrediste);
+        if(x == y){
+            return true;
+        }
+        Unija(podset,x,y);
+    }
+    return false;
+}
+
+
+int main() {
+
+  Graf g(3,3);
+  g.DodajGranu(0,1);
+  g.DodajGranu(0,2);
+  g.DodajGranu(1,2);
+  cout << g.PostojiCiklus();
+
+  return 0;
+}
+

@@ -1,0 +1,33 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+
+int main()
+{
+
+    vector<int> niz = {10, 22, 9, 33, 21, 50, 41, 60};
+    int n = niz.size();
+    vector<int> lis = niz;
+
+    for(int i = 1; i < n; i++) {
+        for(int j = 0; j < i; j++) {
+            if(niz[i] > niz[j] && lis[i] < (lis[j] * niz[i]) ) {
+                lis[i] = lis[j] * niz[i];
+            }
+        }
+    }
+
+    int max_proizvod = lis[0];
+    for(int i = 1; i < n; i++) {
+        if(lis[i] > max_proizvod) {
+            max_proizvod = lis[i];
+        }
+    }
+
+    cout << "Maksimalni proizvod rastuce podsekvence je : " << max_proizvod << endl;
+
+
+   return 0;
+}

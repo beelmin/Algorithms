@@ -1,0 +1,33 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+
+using namespace std;
+
+int main() {
+
+    vector<int> v = {15, -2, 2, -8, 1, 7, 10, 23};
+
+    unordered_map<int,int> mapa;
+
+    int suma = 0;
+    int rezultat = 0;
+
+    for(int i = 0; i < v.size(); i++) {
+        suma += v[i];
+
+        if(suma == 0) {
+            rezultat = i + 1;
+        }	
+
+        if(mapa.find(suma) != mapa.end()){
+            rezultat = max(rezultat,i-mapa[suma]);
+        }else{
+            mapa[suma] = i;
+        }
+    }
+
+    cout << rezultat << endl;
+
+    return 0;
+}

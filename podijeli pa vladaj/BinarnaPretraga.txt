@@ -1,0 +1,24 @@
+#include <iostream>
+
+using namespace std;
+
+int binarna_pretraga(int niz[], int pocetak, int kraj, int x){                  // vremenska slozenost je O(log n )
+    if(pocetak <= kraj){
+    	int sredina = (pocetak+kraj)/2;     // index sredisnjeg elementa
+    	if(x == niz[sredina]){
+            return sredina;
+        }else if(x < niz[sredina]){
+            return binarna_pretraga(niz,pocetak,sredina-1,x);
+        }else {
+            return binarna_pretraga(niz,sredina+1,kraj,x);
+        }
+    }
+    return -1;
+}
+
+int main()
+{
+    int niz[] = {2,3,6,10,15,22,28,29,36,38,45,55,60,65,68,70,73};
+    cout << binarna_pretraga(niz,0,16,22);
+    return 0;
+}

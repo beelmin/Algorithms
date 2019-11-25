@@ -1,0 +1,30 @@
+#include <iostream>
+
+using namespace std;
+
+void BubbleSort(int niz[], int n) {
+    for(int i = n-1; i >= 1; i--) {
+        for(int j = 1; j <= i; j++){
+            if(niz[j-1] > niz[j]){
+                int temp = niz[j-1];
+                niz[j-1] = niz[j];
+                niz[j] = temp;
+            }
+        }
+    }
+}
+
+int main()
+{
+    const int broj_elemenata(6);
+    int niz[] = {10,11,3,4,9,2};
+    for(int i = 0; i < broj_elemenata; i++) {
+        cout << niz[i] << endl;
+    }
+    BubbleSort(niz,broj_elemenata);
+    cout << "Nakon sortiranja " << endl;
+    for(int i = 0; i < broj_elemenata; i++) {
+        cout << niz[i] << endl;
+    }
+    return 0;
+}

@@ -1,0 +1,83 @@
+/*
+Naziv : Kefa and Park
+Tagovi : dfs and similar, graphs, trees
+Tezina : 1500
+Vremenska kompleksnost :  O ( V + E )
+*/
+
+
+#include <iostream>
+#include <vector>
+#include <list>
+
+using namespace std;
+
+class Graf {
+    int V;
+    list<int> *lista;
+    void DFS(int cvor, int roditelj, vector<int> &macke, int m, int brojac, int &broj_puteva);
+public:
+    Graf(int V) {
+        this->V = V;
+        lista = new list<int> [V];
+    }
+    void DodajGranu(int u, int v) {
+        lista[u].push_back(v);
+        lista[v].push_back(u);
+    }
+    int BrojPuteva(vector<int> &macke, int m) {   
+        int broj_puteva = 0;
+        int brojac = 0;
+
+        DFS(1,0,macke,m,brojac,broj_puteva);
+
+        return broj_puteva;
+    }
+
+};
+
+void Graf::DFS(int cvor, int roditelj, vector<int> &macke, int m, int brojac, int &broj_puteva) {
+    if(macke[cvor] == 1){
+        brojac++;
+    }else {
+        brojac = 0;
+    }
+    if(brojac > m) {
+        return;
+    }
+
+    if(lista[cvor].size() == 1 && cvor != 1) {
+        broj_puteva++;
+        return;
+    }
+
+    list<int>::iterator it;
+    for(it = lista[cvor].begin(); it != lista[cvor].end(); ++it) {
+        if(*it != roditelj) {
+            DFS(*it,cvor,macke,m,brojac,broj_puteva);
+        }
+    }
+}
+
+
+
+int main()
+{
+    int n, m;
+    cin >> n >> m;
+    Graf g(n+1);
+    vector<int> macke(n+1);
+    for(int i = 1; i <= n; i++) {
+        cin >> macke[i];
+    }
+
+    for(int i = 1; i < n; i++) {
+        int cvor1,cvor2;
+        cin >> cvor1 >> cvor2;
+        g.DodajGranu(cvor1,cvor2);
+    }
+
+    cout << g.BrojPuteva(macke,m);
+
+    return 0;
+}

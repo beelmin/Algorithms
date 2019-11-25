@@ -1,0 +1,35 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+
+int main()
+{
+
+    vector<int> niz = {10,22,9,33,21,50,41,60,80};
+    int n = niz.size();
+    vector<int> lis = niz;
+
+    for(int i = 1; i < n; i++) {
+        for(int j = 0; j < i; j++) {
+            if(niz[i] > niz[j] && lis[i] < lis[j] + niz[i]) {
+                lis[i] = lis[j] + niz[i];
+            }
+        }
+    }
+
+    int max_suma = lis[0];
+    for(int i = 1; i < n; i++) {
+        if(lis[i] > max_suma) {
+            max_suma = lis[i];
+        }
+    }
+
+    cout << "Maksimalna suma rastuce podsekvence je : " << max_suma << endl;
+
+
+   return 0;
+}
+
+vremenska kompleksnost :  O ( n^2 )

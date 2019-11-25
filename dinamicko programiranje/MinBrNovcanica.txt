@@ -1,0 +1,31 @@
+Dat je niz novcanica i neka vrijednost X. Koliki je minimalan broj novcanica potreban da se isplati vrijednost X pri cemu svaku novcanicu 
+mozemo koristiti neogranicen broj puta ?
+
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+
+    vector<int> novcici = {5,10,15};
+
+    int suma = 30;
+
+    vector<int> dp(suma+1,INT_MAX);
+    dp[0] = 0;
+
+    for(int i = 1; i <= suma; i++) {
+        for(int j = 0; j < novcici.size(); j++) {
+            if(novcici[j] <= i) {
+                int temp = dp[i-novcici[j]];
+                dp[i] = min(dp[i],temp+1);
+            }
+        }
+    }
+
+    cout << dp[suma] << endl;
+
+    return 0;
+}

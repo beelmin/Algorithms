@@ -1,0 +1,34 @@
+#include <iostream>
+
+using namespace std;
+
+void ShellSort(int niz[], int n){
+    int H[] = {7,3,1};                  // niz razmaka
+    for(int i = 0; i < 3; i++){
+        int h = H[i];
+        for(int j = h; j < n; j++){
+            int temp = niz[j];
+            int k = j - h;
+            while(k >= 0 && niz[k] > temp) {
+                niz[k+h] = niz[k];
+                k = k-h;
+            }
+            niz[k+h] = temp;
+        }
+    }
+
+}
+
+int main()
+{
+    const int broj_elemenata(20);
+    int niz[] = {28,17,10,79,13,67,23,33,12,5,9,80,86,15,59,49,64,54,36,29};
+    ShellSort(niz,broj_elemenata);
+    for(int i = 0; i < broj_elemenata; i++) {
+        cout << niz[i] << " ";
+    }
+
+
+
+    return 0;
+}

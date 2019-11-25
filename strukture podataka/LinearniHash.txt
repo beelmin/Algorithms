@@ -1,0 +1,86 @@
+#include <iostream>
+
+using namespace std;
+
+class LinearniHash {
+    int *niz;                       // elementi hash tabele
+    int prazno_mjesto;              // oznaka za prazno mjesto
+    int velicina;                   // velicina hash tabele
+    int h(const int &k, int i){      // hash funkcija
+        return ((k % velicina) + i) % velicina;
+    }
+public:
+    LinearniHash(int praznoMjesto, int vel);
+    void Umetni(const int &x);
+    int Trazi(const int &x);
+    void Brisi(const int &x);
+    void Ispis() const;
+    ~LinearniHash() { delete[] niz; }
+};
+
+LinearniHash::LinearniHash(int praznoMjesto, int vel) {
+    velicina = vel;
+    niz = new int[vel];
+    prazno_mjesto = praznoMjesto;
+    for(int i = 0; i < vel; i++) {
+        niz[i] = praznoMjesto;
+    }
+}
+
+void LinearniHash::Umetni(const int &x) {
+    int i(0), j;
+    do {
+        j = h(x,i);
+        if(niz[j] == prazno_mjesto){
+            niz[j] = x;
+            break;
+        }else{
+            i++;
+        }
+    }while(i < velicina);
+}
+
+int LinearniHash::Trazi(const int &x){
+    int i(0), index;
+    do {
+        index = h(x,i);
+        if(niz[index] == x) {
+            return index;
+        }else{
+            i++;
+        }
+    }while(niz[index] != prazno_mjesto && i != velicina);
+    return prazno_mjesto;
+}
+
+void LinearniHash::Brisi(const int &x) {
+    int index = Trazi(x);
+    if(index != prazno_mjesto) {
+        niz[index] = prazno_mjesto;
+    }
+}
+
+void LinearniHash::Ispis() const {
+    for(int i = 0; i < velicina; i++){
+        cout << niz[i] << endl;
+    }
+}
+
+int main()
+{
+    LinearniHash T(-1,10);
+    T.Umetni(31);
+    T.Umetni(54);
+    T.Umetni(25);
+    T.Umetni(7);
+    T.Umetni(14);
+    T.Umetni(19);
+    T.Umetni(70);
+    T.Umetni(89);
+    T.Brisi(54);
+    T.Umetni(64);
+    T.Umetni(29);
+    T.Ispis();
+
+    return 0;
+}

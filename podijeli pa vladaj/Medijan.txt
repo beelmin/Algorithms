@@ -1,0 +1,63 @@
+Data su 2 sortirana niza sa istim brojem elemenata. Potrebno je naci njihov medijan.
+
+#include <iostream>
+
+using namespace std;
+
+int Medijan(int niz[], int n) {     // f-ja koja vraca medijan u sortiranom nizu
+
+    if(n % 2 == 0) {
+        return ( niz[n/2] + niz[(n/2)-1] ) / 2;
+
+    }else{
+        return niz[n/2];
+    }
+
+}
+
+int NadjiMedijan(int niz1[], int niz2[], int n) {       // oba niza su sortirana i imaju po n elemenata
+    if(n == 1){
+        return ( niz1[0] + niz2[0] ) / 2;
+    }
+    if(n == 2) {
+        return ( max(niz1[0],niz2[0]) + min(niz1[1],niz2[1]) ) / 2;
+    }
+
+    int m1 = Medijan(niz1,n);
+    int m2 = Medijan(niz2,n);
+
+    if(m1 == m2) {
+        return m1;          // moglo je i m2 , svejedno je
+    }
+
+    if(m1 < m2) {           // tada se medijan nalazi u niz1[m1 ... ] i niz2[... m2]
+       if(n % 2 == 0) {
+            return NadjiMedijan( niz1 + (n/2)-1, niz2, n - (n/2)+1 );
+       }else {
+            return NadjiMedijan( niz1 + (n / 2), niz2, n - (n/2) );
+       }
+    }else{
+        if(n % 2 == 0){
+            return NadjiMedijan(niz2 + (n/2)-1, niz1, n - (n/2)+1 );
+        }else{
+            return NadjiMedijan(niz2 + (n/2), niz1, n - (n/2) );
+        }
+    }
+
+}
+
+
+
+int main() {
+
+  int niz1[] = {1, 12, 15, 26, 38};
+  int niz2[] = {2, 13, 17, 30, 45};
+  int n = sizeof(niz1) / sizeof(niz1[0]);
+
+  cout << NadjiMedijan(niz1,niz2,n);
+
+
+  return 0;
+}
+
+vremenska kompleksnost:  O ( logn )

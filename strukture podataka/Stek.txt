@@ -1,0 +1,76 @@
+#include <iostream>
+
+using namespace std;
+
+class Stek {
+    struct Cvor {
+        int element;
+        Cvor *sljedeci;
+    };
+    Cvor *vrh;          // pokazivac na vrh steka
+    int velicina;       // trenutna velicina steka
+public:
+    Stek() : vrh(nullptr), velicina(0) {}
+    void StaviNaStek(const int &x);
+    void SkiniSaSteka();
+    int &ElementNaVrhu() const;
+    void Brisi();
+    bool JeLiPrazan() const { return vrh == nullptr; }
+    int Duzina() const { return velicina; }
+    void IspisSteka() const;
+    ~Stek() { Brisi(); }
+};
+
+void Stek::StaviNaStek(const int &x) {
+    Cvor *novi = new Cvor;
+    novi->element = x;
+    if(velicina == 0){                  // slucaj kada je stek prazan
+        novi->sljedeci = nullptr;
+        vrh = novi;
+    }else{
+        novi->sljedeci = vrh;
+        vrh = novi;
+    }
+    velicina++;
+}
+
+void Stek::SkiniSaSteka() {
+    if(vrh == nullptr) {
+        throw "Stek je prazan";
+    }
+    Cvor *pomocni;
+    pomocni = vrh;
+    vrh = pomocni->sljedeci;
+    delete pomocni;
+    velicina--;
+}
+
+int &Stek::ElementNaVrhu() const {
+    if(vrh == nullptr){
+        throw "Stek je prazan";
+    }
+    return vrh->element;
+}
+
+void Stek::IspisSteka() const {
+    for(Cvor *p = vrh; p != nullptr; p = p->sljedeci){
+        cout << p->element << endl;
+    }
+}
+
+void Stek::Brisi() {
+    while( JeLiPrazan() == false ){
+        SkiniSaSteka();
+    }
+}
+
+int main()
+{
+    Stek S;
+    S.StaviNaStek(8);
+    S.StaviNaStek(12);
+    S.StaviNaStek(5);
+    S.StaviNaStek(9);
+    S.IspisSteka();
+    return 0;
+}
